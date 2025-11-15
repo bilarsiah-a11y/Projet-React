@@ -1,0 +1,84 @@
+/* frontend/src/sections/Listedentiste2.css */
+.liste-dentistes-page {
+  text-align: center;
+  padding: 20px;
+  background-color: white;
+  color: black;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.filter-container {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+label {
+  font-size: 16px;
+}
+
+select {
+  background-color: white;
+  color: #0e0d0d;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #ffd700;
+}
+
+.dentistes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px; /* espace entre les cards */
+  justify-items: center; /* centre les cards horizontalement */
+}
+
+.dentiste-card {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  width: 100%; /* prend toute la colonne */
+  max-width: 700px; /* largeur max d'une card */
+}
+
+.dentiste-left {
+  flex: 0 0 70px;
+  margin-right: 10px;
+}
+
+.dentiste-avatar {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+
+.dentiste-right {
+  flex: 1;
+  font-size: 0.85em;
+}
+
+.dentiste-right h3 {
+  margin: 0 0 4px 0;
+  font-size: 0.95em;
+}
+
+.dentiste-right p {
+  margin: 2px 0;
+  line-height: 1.2;
+  color: #555;
+}

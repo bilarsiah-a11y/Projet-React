@@ -1,0 +1,148 @@
+.login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f4f8;
+  padding: 20px;
+}
+
+.login-container {
+  background: white;
+  padding: 50px 60px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-logo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 25px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 14px 14px 14px 45px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 17px;
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+  outline: none;
+}
+
+.icon1, .icon2 {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 20px;
+}
+
+.btn1 {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.btn1:hover {
+  background-color: #2380c3;
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.form-footer p {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 15px;
+}
+
+.icon3 {
+  font-size: 20px;
+}
+
+/* Lien Mot de passe oublié */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forgot-password-link span {
+  color: #3498db;
+  cursor: pointer;
+  font-size: 15px;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link span:hover {
+  color: #2380c3;
+  text-decoration: none;
+}
+
+/* === STYLES DU DIALOGUE PRIMEREACT === */
+.p-dialog .p-dialog-content {
+  background: white !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+}
+
+.p-dialog {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 12px !important;
+  border: none !important;
+  width: 450px !important;
+  max-width: 90vw !important;
+}
+
+/* Header du dialogue - CACHÉ */
+.p-dialog .p-dialog-header {
+  display: none !important;
+}
+
+/* Overlay */
+.p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(5px) !important;
+}
