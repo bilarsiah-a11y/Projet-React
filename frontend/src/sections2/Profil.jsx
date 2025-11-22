@@ -208,10 +208,6 @@ const Profil = () => {
             Ajouter infos
           </button>
         </div>
-
-        <button onClick={handleLogout} className="logout-btn">
-          Déconnexion
-        </button>
       </div>
 
       {/* DIALOG AJOUT */}

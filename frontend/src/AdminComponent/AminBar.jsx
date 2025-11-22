@@ -1,44 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+// src/components/AdminBar.jsx
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./AdminBar.css";
-import { IoLogOutSharp } from "react-icons/io5";
 import { IoMdNotifications } from "react-icons/io";
-import Axios from "axios"; // AJOUT: Pour les notifications
+import Axios from "axios";
+import AdminProfileDropdown from "../Admin/AdminProfileDropdown"; 
 
 const AdminBar = () => {
   const navigate = useNavigate();
-  const [notificationCount, setNotificationCount] = useState(0); // AJOUT: État pour le compteur
-
-  // AJOUT: Récupérer le nombre de notifications
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [pendingUsers, setPendingUsers] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  
+const fetchNotifications = async () => {
+  try {
+    const res = await Axios.get('http://localhost:3002/admin/pending-users');
+    console.log('Notifications reçues:', res.data); // Debug
+    setPendingUsers(res.data);
+    setNotificationCount(res.data.length);
+  } catch (err) {
+    console.error('Erreur notifications:', err);
+    setNotificationCount(0);
+    setPendingUsers([]);
+  }
+};
   useEffect(() => {
-    fetchNotificationCount();
-    
-    // Actualiser toutes les 30 secondes
-    const interval = setInterval(fetchNotificationCount, 30000);
-    
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 15000);
     return () => clearInterval(interval);
   }, []);
 
-  const fetchNotificationCount = () => {
-    Axios.get('http://localhost:3002/admin/pending-users')
-      .then(response => {
-        setNotificationCount(response.data.length);
-      })
-      .catch(error => {
-        console.error('Erreur récupération notifications:', error);
-      });
-  };
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/apropos", { replace: true });
+  const goToValidation = (user) => {
+    setShowDropdown(false);
+    navigate("/admin/valide", { state: { user } });
   };
 
   return (
     <nav className="navbar">
       <div className="nav-container">
         <div className="nav-logo">
-          <h2>🦷 AdminPage</h2>
+          <h2>AdminPage</h2>
         </div>
 
         <div className="nav-content">
@@ -48,30 +60,62 @@ const AdminBar = () => {
             <li><Link to="/admin/statistique">Statistiques</Link></li>
             <li><Link to="/admin/valide">Validations</Link></li>
           </ul>
-          
-          <div className="nav-right">
-            {/* AJOUT: Lien notifications avec badge */}
-            <Link to="/admin/notifications" className="notification-link">
-              <IoMdNotifications className="notification-icon" />
-              {notificationCount > 0 && (
-                <span className="notification-badge">{notificationCount}</span>
-              )}
-            </Link>
 
-            <Link to="/admin/profil" className="nav-profile">Profil</Link>
-            
-            {/* AJOUT: Bouton logout avec confirmation */}
-            <button 
-              onClick={() => {
-                if (window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
-                  handleLogout();
-                }
-              }} 
-              className="logout-btn"
-              title="Déconnexion"
-            >
-              <IoLogOutSharp />
-            </button>
+          <div className="nav-right">
+            {/* === CLOCHE NOTIFICATIONS === */}
+            <div className="notification-wrapper" ref={dropdownRef}>
+              <button
+                className="notification-bell-btn"
+                onClick={() => setShowDropdown(!showDropdown)}
+              >
+                <IoMdNotifications className="notification-icon" />
+                {notificationCount > 0 && (
+                  <span className="notification-badge">
+                    {notificationCount > 99 ? "99+" : notificationCount}
+                  </span>
+                )}
+              </button>
+
+              {showDropdown && (
+                <div className="notification-dropdown">
+                  <div className="dropdown-header">
+                    <h3>Notifications</h3>
+                    <span>{notificationCount} en attente</span>
+                  </div>
+
+                  {notificationCount === 0 ? (
+                    <div className="no-notifications">Aucune inscription en attente</div>
+                  ) : (
+                    <>
+                      <div className="dropdown-list">
+                        {pendingUsers.map(user => (
+                          <div key={user.id} className="notif-item" onClick={() => goToValidation(user)}>
+                            <div className="notif-avatar">
+                              {user.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="notif-text">
+                              <strong>{user.username}</strong> s'est inscrit(e)
+                              <small>
+                                {new Date(user.created_at).toLocaleDateString()} à{" "}
+                                {new Date(user.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                              </small>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="dropdown-footer">
+                        <button onClick={() => { setShowDropdown(false); navigate("/admin/valide"); }}>
+                          Voir toutes les validations
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* === NOUVEAU MENU PROFIL AVEC NOM === */}
+            <AdminProfileDropdown />
           </div>
         </div>
       </div>

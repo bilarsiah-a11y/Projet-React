@@ -12,7 +12,7 @@ const Navbar = () => {
         </div>
 
         <ul className="nav-menu">
-          <li><Link to="/apropos">À propos</Link></li>
+          <li><Link to="/apropos">Accueil </Link></li>
           <li><Link to="/listedentistes">Liste des dentistes</Link></li>
           <li><Link to="/statistiques">Statistiques</Link></li>
           <li><Link to="/connexion">Se connecter</Link></li>

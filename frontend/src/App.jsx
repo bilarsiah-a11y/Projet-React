@@ -26,7 +26,6 @@ import AdminListe from './Admin/AdminListe';
 import AdminStatistique from './Admin/AdminStatistique';
 import AdminValide from './Admin/AdminValide';
 import AdminProfil from './Admin/AdminProfil';
-import AdminNotification from './Admin/AdminNotification'
 
 // CSS
 import './App.css';
@@ -131,7 +130,6 @@ function App() {
             <Route path="/admin/statistique" element={<AdminStatistique />} />
             <Route path="/admin/valide" element={<AdminValide />} />
             <Route path="/admin/profil" element={<AdminProfil />} />
-            <Route path="/admin/notifications" element={<AdminNotification />} /> 
           </Route>
 
           {/* === Redirection par défaut === */}

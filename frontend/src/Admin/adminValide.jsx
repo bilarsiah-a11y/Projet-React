@@ -18,40 +18,40 @@ const AdminValide = () => {
     }
   }, [location]);
 
-  const fetchPendingUsers = async () => {
-    try {
-      const response = await Axios.get('http://localhost:3002/admin/pending-users');
-      setPendingUsers(response.data);
-    } catch (error) {
-      console.error('Erreur récupération utilisateurs:', error);
-      setMessage('Erreur lors de la récupération des inscriptions');
-      // Effacer le message après 3 secondes
-      setTimeout(() => setMessage(''), 3000);
-    }
-  };
+ const fetchPendingUsers = async () => {
+  try {
+    const response = await Axios.get('http://localhost:3002/admin/pending-users');
+    console.log('Utilisateurs en attente:', response.data); // Debug
+    setPendingUsers(response.data);
+  } catch (error) {
+    console.error('Erreur récupération utilisateurs:', error);
+    setMessage('Erreur lors de la récupération des inscriptions');
+    setTimeout(() => setMessage(''), 3000);
+  }
+};
 
-  const handleValidation = async (action) => {
-    if (!selectedUser) return;
+const handleValidation = async (action) => {
+  if (!selectedUser) return;
 
-    try {
-      const response = await Axios.post('http://localhost:3002/admin/validate-user', {
-        userId: selectedUser.id,
-        action: action,
-        adminNotes: adminNotes
-      });
-      
-      setMessage(response.data.message);
-      setAdminNotes('');
-      setSelectedUser(null);
-      await fetchPendingUsers(); // Attendre le rafraîchissement
-      
-      setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      console.error('Erreur validation:', error);
-      setMessage('Erreur lors de la validation');
-      setTimeout(() => setMessage(''), 3000);
-    }
-  };
+  try {
+    const response = await Axios.post('http://localhost:3002/admin/validate-user', {
+      userId: selectedUser.id,
+      action: action,
+      adminNotes: adminNotes
+    });
+    
+    setMessage(response.data.message);
+    setAdminNotes('');
+    setSelectedUser(null);
+    await fetchPendingUsers(); 
+    
+    setTimeout(() => setMessage(''), 3000);
+  } catch (error) {
+    console.error('Erreur validation:', error);
+    setMessage(error.response?.data?.message || 'Erreur lors de la validation');
+    setTimeout(() => setMessage(''), 3000);
+  }
+};
 
   return (
     <div className="admin-validate">
@@ -105,16 +105,6 @@ const AdminValide = () => {
                 <p><strong>Nom:</strong> {selectedUser.username}</p>
                 <p><strong>Email:</strong> {selectedUser.email}</p>
                 <p><strong>Date d'inscription:</strong> {new Date(selectedUser.created_at).toLocaleString()}</p>
-              </div>
-
-              <div className="notes-section">
-                <label>Notes (optionnel):</label>
-                <textarea
-                  value={adminNotes}
-                  onChange={(e) => setAdminNotes(e.target.value)}
-                  placeholder="Ajouter un commentaire pour l'utilisateur..."
-                  rows="4"
-                />
               </div>
 
               <div className="action-buttons">

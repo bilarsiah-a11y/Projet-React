@@ -1,0 +1,123 @@
+.accueil-court {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 70%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.hero {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.6rem;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+.red { color: #46d8e2; font-weight: 900; }
+
+.slogan {
+  font-size: 1.4rem;
+  color: #34495e;
+  margin: 20px 0 40px;
+}
+
+.actions {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+}
+
+.btn {
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+}
+
+.big { padding: 16px 36px; }
+
+.primary  { background: #1dbacf; color: white; }
+.primary:hover { background: #17a2b8; transform: translateY(-3px); }
+
+.secondary { background: transparent; color: #1dbacf; border: 2px solid #1dbacf; }
+.secondary:hover { background: #1dbacf; color: white; }
+
+/* Mini régions */
+.regions-mini p {
+  margin: 40px 0 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tag {
+  background: white;
+  color: #1dbacf;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid #a0e6ee;
+}
+
+/* CTA dentiste */
+.dentist-cta {
+  margin-top: 50px;
+}
+
+.dentist-cta p {
+  margin-bottom: 10px;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.link {
+  color: #1dbacf;
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 1.15rem;
+}
+
+/* Footer tout petit */
+.mini-footer {
+  padding: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  background: rgba(255,255,255,0.8);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  h1 { font-size: 2.2rem; }
+  .slogan { font-size: 1.25rem; }
+  .actions { flex-direction: column; align-items: center; }
+  .btn { width: 80%; max-width: 300px; }
+}
