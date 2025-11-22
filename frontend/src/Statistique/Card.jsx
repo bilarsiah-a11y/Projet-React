@@ -92,10 +92,10 @@ function CompactCard({ param, setExpanded }) {
             />
           </div>
         ) : (
-        
-          <div className="card-percentage">
-            100%
+         <div>
+           
           </div>
+         
         )}
       </div>
       
