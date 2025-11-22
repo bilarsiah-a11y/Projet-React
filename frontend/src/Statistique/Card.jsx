@@ -8,7 +8,7 @@ import { FaMapMarker, FaUserTie, FaUsers } from "react-icons/fa";
 import { MdTitle } from "react-icons/md";
 import './card.css';
 
-// Mapping des icônes
+// icônes
 const iconComponents = {
   FaMapMarker,
   MdTitle,
@@ -46,6 +46,8 @@ const Card = (props) => {
 
 function CompactCard({ param, setExpanded }) {
   const IconComponent = param.png;
+  
+  const isTotalCard = param.title === "Total Dentistes";
 
   return (
     <motion.div
@@ -56,30 +58,57 @@ function CompactCard({ param, setExpanded }) {
       }}
       onClick={setExpanded}
       layoutId={`expandableCard-${param.title}`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
-      <div className="radialBar">
-        <CircularProgressbar
-          value={param.barValue}
-          text={`${param.barValue}%`}
-          styles={{
-            path: { stroke: '#fff' },
-            text: { fill: '#fff', fontSize: '16px', fontWeight: 'bold' },
-            trail: { stroke: 'rgba(255,255,255,0.2)' }
-          }}
-        />
+      <div className="card-header">
+        <div className="card-icon-container">
+          <IconComponent className="card-icon" />
+        </div>
+        {!isTotalCard ? (
+          // CircularProgressbar pour  3 premières 
+          <div className="circular-progress-container">
+            <CircularProgressbar
+              value={param.barValue}
+              text={`${param.barValue}%`}
+              styles={{
+                root: { width: 60, height: 60 },
+                path: { 
+                  stroke: '#fff',
+                  strokeLinecap: 'round',
+                },
+                text: { 
+                  fill: '#fff', 
+                  fontSize: '24px', 
+                  fontWeight: 'bold',
+                  dominantBaseline: 'middle',
+                  textAnchor: 'middle'
+                },
+                trail: { 
+                  stroke: 'rgba(255,255,255,0.2)',
+                  strokeLinecap: 'round',
+                }
+              }}
+            />
+          </div>
+        ) : (
+        
+          <div className="card-percentage">
+            100%
+          </div>
+        )}
+      </div>
+      
+      <div className="card-content">
         <span className="card-title">{param.title}</span>
-      </div>
-      <div className="detail">
-        <IconComponent className="card-icon" />
         <span className="card-value">{param.value}</span>
-        <span className="card-period">Mise à jour en temps réel</span>
       </div>
+
     </motion.div>
   );
 }
 
+// ... (ExpandedCard reste inchangé)
 function ExpandedCard({ param, setExpanded }) {
   const chartOptions = {
     chart: {

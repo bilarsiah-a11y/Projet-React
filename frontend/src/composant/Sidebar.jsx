@@ -17,6 +17,7 @@ const Sidebar = () => {
           <li><Link to="/statistiques2">Statistiques</Link></li>
           <li><Link to="/profil">Mon profil</Link></li>
         </ul>
+  
       </div>
     </nav>
   )

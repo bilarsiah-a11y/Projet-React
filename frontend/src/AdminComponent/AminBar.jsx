@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import "./AdminBar.css";
 import { IoLogOutSharp } from "react-icons/io5";
+import { IoMdNotifications } from "react-icons/io";
+import Axios from "axios"; // AJOUT: Pour les notifications
 
 const AdminBar = () => {
   const navigate = useNavigate();
+  const [notificationCount, setNotificationCount] = useState(0); // AJOUT: État pour le compteur
+
+  // AJOUT: Récupérer le nombre de notifications
+  useEffect(() => {
+    fetchNotificationCount();
+    
+    // Actualiser toutes les 30 secondes
+    const interval = setInterval(fetchNotificationCount, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchNotificationCount = () => {
+    Axios.get('http://localhost:3002/admin/pending-users')
+      .then(response => {
+        setNotificationCount(response.data.length);
+      })
+      .catch(error => {
+        console.error('Erreur récupération notifications:', error);
+      });
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -27,11 +50,28 @@ const AdminBar = () => {
           </ul>
           
           <div className="nav-right">
+            {/* AJOUT: Lien notifications avec badge */}
+            <Link to="/admin/notifications" className="notification-link">
+              <IoMdNotifications className="notification-icon" />
+              {notificationCount > 0 && (
+                <span className="notification-badge">{notificationCount}</span>
+              )}
+            </Link>
+
             <Link to="/admin/profil" className="nav-profile">Profil</Link>
-           <a href=""></a>
-            <a onClick={handleLogout} className="logout-btn">
+            
+            {/* AJOUT: Bouton logout avec confirmation */}
+            <button 
+              onClick={() => {
+                if (window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+                  handleLogout();
+                }
+              }} 
+              className="logout-btn"
+              title="Déconnexion"
+            >
               <IoLogOutSharp />
-            </a>
+            </button>
           </div>
         </div>
       </div>

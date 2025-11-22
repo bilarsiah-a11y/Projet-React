@@ -9,10 +9,10 @@
 
 .login-container {
   background: white;
-  padding: 50px 60px;
+  padding: 40px;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  max-width: 500px;
+  max-width: 450px;
   width: 100%;
   text-align: center;
 }
@@ -26,15 +26,16 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   font-weight: 600;
   color: #333;
   font-size: 16px;
+  text-align: left;
 }
 
 .input-container {
@@ -48,12 +49,12 @@
   padding: 14px 14px 14px 45px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 17px;
+  font-size: 16px;
   transition: all 0.3s ease;
 }
 
 .input-container input:focus {
-  border-color: #3498db;
+  border-color: #00bcd4;
   box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
   outline: none;
 }
@@ -68,28 +69,34 @@
 }
 
 .btn1 {
-  background-color: #3498db;
+  background-color: #00bcd4;
   color: white;
   border: none;
   padding: 14px 20px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   width: 100%;
   transition: background-color 0.3s;
+  font-weight: 600;
 }
 
 .btn1:hover {
-  background-color: #2380c3;
+  background-color: #00a5bb;
+}
+
+.btn1:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .form-footer {
   text-align: center;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .form-footer p {
@@ -103,46 +110,227 @@
 }
 
 /* Lien Mot de passe oublié */
-.forgot-password-link {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.forgot-password-link span {
+.forgot-link p {
   color: #3498db;
   cursor: pointer;
   font-size: 15px;
   text-decoration: underline;
   transition: color 0.3s ease;
+  margin: 0;
 }
 
-.forgot-password-link span:hover {
+.forgot-link p:hover {
   color: #2380c3;
   text-decoration: none;
 }
 
-/* === STYLES DU DIALOGUE PRIMEREACT === */
-.p-dialog .p-dialog-content {
-  background: white !important;
-  border-radius: 12px !important;
+/* Bouton retour */
+.back-btn {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px;
+  padding: 8px 0;
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: #3730a3;
+}
+
+/* Messages */
+.message {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.message.success { 
+  background: #d4edda; 
+  color: #155724; 
+  border: 1px solid #c3e6cb; 
+}
+
+.message.error { 
+  background: #f8d7da; 
+  color: #721c24; 
+  border: 1px solid #f5c6cb; 
+}
+
+/* Bouton annuler */
+.btn-cancel {
+  margin-top: 10px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-cancel:hover {
+  background: #5a6268;
+}
+
+/* Instructions */
+.instruction {
+  color: #555;
+  margin-bottom: 20px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.sub-instruction {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Container pour les 6 cases de code */
+.code-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.code-input {
+  width: 50px !important;
+  height: 60px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
   padding: 0 !important;
+  transition: all 0.3s ease;
 }
 
-.p-dialog {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
-  border-radius: 12px !important;
-  border: none !important;
-  width: 450px !important;
-  max-width: 90vw !important;
+.code-input:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+  outline: none;
+  transform: scale(1.05);
 }
 
-/* Header du dialogue - CACHÉ */
-.p-dialog .p-dialog-header {
-  display: none !important;
+.code-input.filled {
+  border-color: #00bcd4;
+  background-color: #f8fdff;
 }
 
-/* Overlay */
-.p-dialog-mask {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-  backdrop-filter: blur(5px) !important;
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 30px 25px;
+    margin: 10px;
+  }
+
+  .login-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+  }
+
+  .code-input-container {
+    gap: 8px;
+  }
+
+  .code-input {
+    width: 45px !important;
+    height: 55px;
+    font-size: 20px;
+  }
+
+  .input-container input {
+    padding: 12px 12px 12px 40px;
+    font-size: 15px;
+  }
+
+  .btn1 {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .instruction {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .code-input-container {
+    gap: 6px;
+  }
+
+  .code-input {
+    width: 40px !important;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .login-container {
+    padding: 25px 20px;
+  }
+}
+
+/* Animation pour le focus */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.code-input:focus {
+  animation: pulse 0.3s ease;
+}
+
+
+
+.otp-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.otp-input {
+  width: 58px;
+  height: 62px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: #f9f9f9;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.2);
+  background: white;
+}
+
+@media (max-width: 480px) {
+  .otp-input {
+    width: 50px;
+    height: 55px;
+    font-size: 22px;
+  }
+  .otp-container { gap: 10px; }
 }

@@ -1,19 +1,17 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');  
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
-
-
-//Server.use(middlewares)
-
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));   
-
 const db = mysql.createConnection({
   user: 'root',
   host: 'localhost',
@@ -21,7 +19,7 @@ const db = mysql.createConnection({
   database: 'dentiste'
 });
 
-//verserment du de imae dans le fichier
+//verserment du de imae dans le fichier   MULTER
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -49,6 +47,29 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+// ---------- Nodemailer (Gmail avec mot de passe d'application) ----------
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, 
+  auth: {
+    user: 'bilarsiah@gmail.com',
+    pass: 'bhri qmhg kolv ekyj' 
+  },
+  tls: { rejectUnauthorized: false } 
+});
+
+
+// Vérification que le transporter marche au démarrage
+transporter.verify((error, success) => {
+  if (error) console.error('❌ Erreur SMTP :', error);
+  else console.log('✅ Serveur SMTP prêt');
+});
+
+
+app.listen(3002, () => {
+  console.log('Serveur sur http://localhost:3002');
+});
 
 //---------------------INSCRIPTION------------------------
 
@@ -95,17 +116,73 @@ app.post('/Inscription', async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(Password, 10);
-   const role = 'dentiste';
+  const role = 'dentiste';
+  const status = 'pending'; // Nouveau statut
 
-  const SQL = 'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)';
-  db.query(SQL, [Username, Email, hashedPassword, role], (err, results) => {
+  const SQL = 'INSERT INTO users (username, email, password, role, status) VALUES (?, ?, ?, ?, ?)';
+  db.query(SQL, [Username, Email, hashedPassword, role, status], (err, results) => {
     if (err) {
       if (err.code === 'ER_DUP_ENTRY') {
         return res.status(400).send({ message: 'Utilisateur ou email déjà utilisé' });
       }
       return res.status(500).send({ message: 'Erreur serveur', error: err });
     }
-    res.send({ message: 'Inscription réussie' });
+    res.send({ 
+      message: 'Inscription soumise! En attente de validation par l\'administrateur.',
+      status: 'pending'
+    });
+  });
+});
+
+// Nouvelle route pour récupérer les inscriptions en attente
+app.get('/admin/pending-users', (req, res) => {
+  const SQL = 'SELECT id, username, email, created_at FROM users WHERE status = "pending"';
+  db.query(SQL, (err, results) => {
+    if (err) {
+      return res.status(500).send({ message: 'Erreur serveur', error: err });
+    }
+    res.send(results);
+  });
+});
+
+// Nouvelle route pour valider/refuser les inscriptions
+app.post('/admin/validate-user', (req, res) => {
+  const { userId, action, adminNotes } = req.body; 
+  
+  const newStatus = action === 'approve' ? 'approved' : 'rejected';
+  
+  const SQL = 'UPDATE users SET status = ?, admin_notes = ? WHERE id = ?';
+  db.query(SQL, [newStatus, adminNotes, userId], (err, results) => {
+    if (err) {
+      return res.status(500).send({ message: 'Erreur serveur', error: err });
+    }
+    
+    if (results.affectedRows === 0) {
+      return res.status(404).send({ message: 'Utilisateur non trouvé' });
+    }
+    
+    res.send({ 
+      message: action === 'approve' ? 'Utilisateur approuvé' : 'Utilisateur rejeté',
+      status: newStatus
+    });
+  });
+});
+
+// Route pour vérifier le statut de dentiste!
+app.get('/user-status/:email', (req, res) => {
+  const { email } = req.params;
+  
+  const SQL = 'SELECT status, admin_notes FROM users WHERE email = ?';
+  db.query(SQL, [email], (err, results) => {
+    if (err) {
+      return res.status(500).send({ message: 'Erreur serveur', error: err });
+    }
+    
+    if (results.length === 0) {
+      return res.status(404).send({ message: 'Utilisateur non trouvé' });
+    }
+    
+    res.send(results[0]);
   });
 });
 
@@ -250,7 +327,6 @@ app.post('/Profil', verifyToken, (req, res) => {
 });
 
 
-// ajout profil lié à l'utilisateur connecté
 app.post('/Ajouter', verifyToken, (req, res) => {
   const userId = req.user.id;
   const {
@@ -285,7 +361,6 @@ app.post('/Ajouter', verifyToken, (req, res) => {
   });
 });
 
-//modification
 app.put('/Modifier/:id', (req, res) => {
   const  Values = {
     nom, prenom, date, lieu, genre,adresse, numordre,
@@ -307,65 +382,44 @@ const id = req.params.id;
   });
 });
 
-//---------Mot de passe oublier
-app.post("/MotPasseOublier", async(req, res) =>{
-
-  const {email}= req.body;
-try{
-  const oldUser = await user.findOne((email));
-
-    if(!oldUser){
-      return res.json({status : "L'utiisateur n'exitse pas"})
-    }
-const secret = JWT_SECRET + oldUser.password;
-const token = jwt.sign({email: oldUser.email , 
-  id : oldUser._id},secret,{
-    expiresIn :'5m'
-});
-   const link = 'http://localhost:3002/AvoirPassword/${oldUser._id}/${token}';
-console.log(link)
-
-  } catch (error) {}
-});
-
-app.get('/ResetPassword/:id/:token', async (req, res) => {
-  const { id, token } = req.params;
-  console.log(req.params);
-
-  // Vérifier si l'utilisateur existe
-  const oldUser = await User.findOne({ _id: id });
-  if (!oldUser) {
-    return res.json({ status: "Utilisateur non existant" });
-  }
-
-  // Générer la clé secrète personnalisée
-  const secret = JWT_SECRET + oldUser.password;
-
-  try {
-    const verify = jwt.verify(token, secret);
-    res.send("Votre email a été vérifié");
-  } catch (error) {
-    console.error(error);
-    res.send("Échec de la vérification du token");
-  }
-});
-
-
-
 // ========== Statistiques
+
+const StatsService = {
+  getStatsByField: (db, field) => {
+    return new Promise((resolve, reject) => {
+      const SQL = `SELECT ${field}, COUNT(*) as count FROM profil GROUP BY ${field}`;
+      db.query(SQL, (err, results) => {
+        if (err) reject(err);
+        else resolve(results);
+      });
+    });
+  },
+
+  getTotalCount: (db) => {
+    return new Promise((resolve, reject) => {
+      const SQL = "SELECT COUNT(*) as total FROM profil";
+      db.query(SQL, (err, results) => {
+        if (err) reject(err);
+        else resolve(results[0]);
+      });
+    });
+  }
+};
+
 const handleStats = async (res, operation, errorMessage) => {
   try {
     const results = await operation;
     res.json(results);
   } catch (error) {
-    res.status(500).json(error);
+    console.error(errorMessage, error);
+    res.status(500).json({ error: errorMessage, details: error.message });
   }
 };
 
 app.get("/Statistiques/region", async (req, res) => {
   await handleStats(
     res,
-    StatsService.getStatsByField(db, 'Region', "Erreur statistiques régions"),
+    StatsService.getStatsByField(db, 'Region'),
     "Erreur statistiques régions"
   );
 });
@@ -373,7 +427,7 @@ app.get("/Statistiques/region", async (req, res) => {
 app.get("/Statistiques/titre", async (req, res) => {
   await handleStats(
     res,
-    StatsService.getStatsByField(db, 'Titre', "Erreur statistiques titres"),
+    StatsService.getStatsByField(db, 'Titre'),
     "Erreur statistiques titres"
   );
 });
@@ -381,7 +435,7 @@ app.get("/Statistiques/titre", async (req, res) => {
 app.get("/Statistiques/domaine", async (req, res) => {
   await handleStats(
     res,
-    StatsService.getStatsByField(db, 'Domaine', "Erreur statistiques domaines"),
+    StatsService.getStatsByField(db, 'Domaine'),
     "Erreur statistiques domaines"
   );
 });
@@ -394,38 +448,97 @@ app.get("/Statistiques/total", async (req, res) => {
   );
 });
 
+// --------- Mot de passe oublié  ---------
 
-app.listen(3002, () => {
-  console.log('Serveur sur http://localhost:3002');
+// Route : Demande de réinitialisation (envoie le code par email)
+app.post('/mot-passe-oublier', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email requis' });
+
+  try {
+    const [users] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      // On ne dit PAS si l'email existe ou non (sécurité)
+      return res.json({ success: true, message: 'Si cet email existe, un code vous a été envoyé.' });
+    }
+
+    const user = users[0];
+
+    // Générer code 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const hashedCode = await bcrypt.hash(code, 10);
+    const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+
+    await db.promise().query(
+      'UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?',
+      [hashedCode, expires, user.id]
+    );
+
+    // Envoi email
+    const mailOptions = {
+      from: '"SourireGuide"',
+      to: email,
+      subject: 'Code de réinitialisation - SourireGuide',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+          <h2>Réinitialisation de mot de passe</h2>
+          <p>Voici votre code de validation :</p>
+          <h1 style="font-size: 48px; letter-spacing: 10px; background: #f0f0f0; padding: 20px; display: inline-block; border-radius: 10px;">
+            ${code}
+          </h1>
+          <p>Ce code expire dans <strong>10 minutes</strong>.</p>
+          <p>Si vous n'avez pas demandé cela, ignorez cet email.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'Code envoyé avec succès !' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
 });
 
-// Route unique pour toutes les statistiques par champ
-// app.get("/Statistiques/:type", async (req, res) => {
-//   const { type } = req.params;
-//   const allowedTypes = ['region', 'titre', 'domaine', 'total'];
-  
-//   if (!allowedTypes.includes(type)) {
-//     return res.status(400).json({ message: "Type de statistique non valide" });
-//   }
+// Route : Vérifier le code + changer le mot de passe
+app.post('/reset-password-with-code', async (req, res) => {
+  const { email, code, newPassword, confirmPassword } = req.body;
 
-//   try {
-//     let results;
-//     if (type === 'total') {
-//       results = await StatsService.getTotalCount(db);
-//     } else {
-//       const fieldMap = {
-//         'region': 'Region',
-//         'titre': 'Titre', 
-//         'domaine': 'Domaine'
-//       };
-//       results = await StatsService.getStatsByField(
-//         db, 
-//         fieldMap[type], 
-//         `Erreur statistiques ${type}`
-//       );
-//     }
-//     res.json(results);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ error: 'Les mots de passe ne correspondent pas' });
+  }
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'Le mot de passe doit faire au moins 6 caractères' });
+  }
+
+  try {
+    const [users] = await db.promise().query(
+      'SELECT * FROM users WHERE email = ? AND reset_token_expiry > NOW()',
+      [email]
+    );
+
+    if (users.length === 0) {
+      return res.status(400).json({ error: 'Code expiré ou invalide' });
+    }
+
+    const user = users[0];
+    const isValid = await bcrypt.compare(code, user.reset_token);
+    if (!isValid) {
+      return res.status(400).json({ error: 'Code incorrect' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.promise().query(
+      'UPDATE users SET password = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?',
+      [hashedPassword, user.id]
+    );
+
+    res.json({ success: true, message: 'Mot de passe changé avec succès !' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});

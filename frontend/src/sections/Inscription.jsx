@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserShield } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
@@ -12,13 +12,47 @@ const Inscription = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'warning'
   const navigate = useNavigate();
+
+  // Vérifier le statut périodiquement si l'utilisateur est en attente
+  useEffect(() => {
+    let interval;
+    if (message.includes('attente') && email) {
+      interval = setInterval(() => {
+        checkUserStatus();
+      }, 5000); // Vérifier toutes les 5 secondes
+    }
+    return () => clearInterval(interval);
+  }, [message, email]);
+
+  const checkUserStatus = () => {
+    Axios.get(`http://localhost:3002/user-status/${email}`)
+      .then(response => {
+        const { status, admin_notes } = response.data;
+        
+        if (status === 'approved') {
+          setMessage('Félicitations! Votre inscription a été approuvée. Redirection...');
+          setMessageType('success');
+          setTimeout(() => {
+            navigate('/connexion', { state: { username, password } });
+          }, 3000);
+        } else if (status === 'rejected') {
+          setMessage(`Inscription refusée: ${admin_notes || 'Raison non spécifiée'}`);
+          setMessageType('error');
+        }
+        // Si toujours 'pending', on ne fait rien
+      })
+      .catch(error => {
+        console.error('Erreur vérification statut:', error);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!username || !email || !password) {
       setMessage('Veuillez remplir tous les champs');
+      setMessageType('error');
       return;
     }
 
@@ -27,15 +61,17 @@ const Inscription = () => {
       Email: email,
       Password: password,
     })
-      .then(() => {
-        setMessage('Compte créé avec succès!');
-        setUsername('');
-        setEmail('');
-        setPassword('');
+      .then((response) => {
+        setMessage(response.data.message);
+        setMessageType('warning'); // Message d'attente
+        
+        // Ne pas vider les champs immédiatement
+        // On garde l'email pour vérifier le statut
 
+        // Vérifier le statut après 3 secondes
         setTimeout(() => {
-          navigate('/connexion', { state: { username, password } });
-        }, 1000);
+          checkUserStatus();
+        }, 3000);
       })
       .catch((error) => {
         console.error('Erreur:', error);
@@ -46,22 +82,30 @@ const Inscription = () => {
         } else {
           setMessage('Erreur inattendue');
         }
+        setMessageType('error');
       });
+  };
+
+  const getMessageClass = () => {
+    switch (messageType) {
+      case 'success': return 'message success';
+      case 'error': return 'message error';
+      case 'warning': return 'message warning';
+      default: return 'message';
+    }
   };
 
   return (
     <div className="inscription-container">
-      {/* Image à gauche */}
       <div className="image-side">
         <img src={logo2} alt="Cabinet dentaire" />
       </div>
 
-      {/* Formulaire à droite */}
       <div className="form-side">
         <h1>Inscription</h1>
 
         {message && (
-          <div className={`message ${message.includes('succès') ? 'success' : 'error'}`}>
+          <div className={getMessageClass()}>
             {message}
           </div>
         )}

@@ -12,7 +12,7 @@ import Statistiques from './sections/Statistiques';
 
 // Composants utilisateur
 import Profil from './sections2/Profil';
-import Apropos2 from './sections2/Apropos2';
+import Apropos2 from './sections2/Apropos2';  
 import ListeDentiste2 from './sections2/ListeDentistes2.jsx';
 import Statistiques2 from './sections2/Statistiques2';
 import AutreArea from './composant/AutreArea';
@@ -26,6 +26,7 @@ import AdminListe from './Admin/AdminListe';
 import AdminStatistique from './Admin/AdminStatistique';
 import AdminValide from './Admin/AdminValide';
 import AdminProfil from './Admin/AdminProfil';
+import AdminNotification from './Admin/AdminNotification'
 
 // CSS
 import './App.css';
@@ -52,7 +53,7 @@ const UserLayout = () => (
   </div>
 );
 
-// Layout Admin  en utilisant avec AdminBar
+// Layout Admin en utilisant avec AdminBar
 const AdminLayout = () => (
   <RequireAdmin>
     <div className="sidebar-layout">
@@ -64,7 +65,7 @@ const AdminLayout = () => (
   </RequireAdmin>
 );
 
-// ================= Récupération de  Token =================
+// ================= Récupération de Token =================
 const getToken = () => {
   try {
     const stored = localStorage.getItem('token');
@@ -130,11 +131,11 @@ function App() {
             <Route path="/admin/statistique" element={<AdminStatistique />} />
             <Route path="/admin/valide" element={<AdminValide />} />
             <Route path="/admin/profil" element={<AdminProfil />} />
+            <Route path="/admin/notifications" element={<AdminNotification />} /> 
           </Route>
 
           {/* === Redirection par défaut === */}
           <Route path="*" element={<Navigate to="/" replace />} />
-          {/* <Route path="/motPasseOublier" element={<MotPasseOublier />} /> */}
         </Routes>
       </ErrorBoundary>
     </BrowserRouter>

@@ -7,7 +7,7 @@ const ListeDentistes = () => {
   
   const regionsList = [
     "Alaotra Mangoro", "Antsinanana", "Anosy", "Analanjirofo", "Atsimo Andrefana",
-    "Amoron'i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
+    "Amoron i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
     "Betsiboka", "Bongolava", "Betsimisaraka", "Diana", "Haute Matsiatra",
     "Itasy", "Ihorombe", "Melaky", "Menabe", "Sofia",
     "Vakinankaratra", "Vatovavy Fitovinany"
@@ -19,7 +19,7 @@ const ListeDentistes = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // 🔄 Charger les dentistes selon la région sélectionnée
+  // Charger les dentistes selon la région sélectionnée
    useEffect(() => {
     const fetchDentistes = async () => {
       setLoading(true);
@@ -52,13 +52,10 @@ const ListeDentistes = () => {
         <select
           id="region"
           value={region}
-          onChange={(e) => setRegion(e.target.value)}
-        >
-          {regionsList.map((r, index) => (
-            <option key={index} value={r}>
+          onChange={(e) => setRegion(e.target.value)}>
+          {regionsList.map((r, index) => (<option key={index} value={r}>
               {r}
-            </option>
-          ))}
+            </option> ))}
         </select>
       </div>
 

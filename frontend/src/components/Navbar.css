@@ -10,7 +10,109 @@
 
 .nav-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto;/* ========== Layout Général ========== */
+.app {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* ========== Navbar Layout ========== */
+.navbar-layout .main-content {
+  margin-top: 60px; /* si Navbar fixe */
+}
+
+/* ========== Sidebar Layout ========== */
+.sidebar-layout .main-content {
+  margin-top: 60px; /* si Navbar fixe */
+}
+
+/* ========== Sidebar Admin ========== */
+.sidebar-Admin .main-content {
+  margin-top: 60px; /* si Navbar fixe */
+} /* Fermeture manquante ajoutée */
+
+/* ========== Erreur Boundary ========== */
+.error-boundary {
+  padding: 40px;
+  background-color: #ffebee;
+  min-height: 100vh;
+  font-family: monospace;
+}
+
+.error-boundary h1 {
+  color: #c62828;
+}
+
+.error-boundary .error-box {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.error-boundary pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+  overflow: auto;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+
+.error-boundary button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.error-boundary button:hover {
+  background-color: #1565c0;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+  
+  .navbar-layout .main-content,
+  .sidebar-layout .main-content,
+  .sidebar-Admin .main-content {
+    margin-top: 50px;
+  }
+  
+  .error-boundary {
+    padding: 20px;
+  }
+  
+  .error-boundary .error-box {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 10px;
+  }
+  
+  .navbar-layout .main-content,
+  .sidebar-layout .main-content,
+  .sidebar-Admin .main-content {
+    margin-top: 40px;
+  }
+}
   display: flex;
   justify-content: space-between;
   align-items: center;

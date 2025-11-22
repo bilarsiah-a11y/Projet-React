@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from '../Statistique/Card'; // tu dois importer ton composant Card
-import { CardsData } from '../Service/statistiqueService.js';
 import '../sections2Css/Statistiques2.css';
 const Statistiques2 = () => {
   return (

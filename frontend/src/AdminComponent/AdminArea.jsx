@@ -3,12 +3,14 @@ import AdminHome from './Admin/AdminHome';
 import AdminListe from './Admin/AdminListe';
 import AdminStatistique from './Admin/AdminStatistique';
 import AdminSms from './Admin/AdminSms';
+import AdminProfil from './Admin/AdminProfil'; 
+import AdminValide from './Admin/AdminValide'; 
+import AdminNotification from './Admin/AdminNotification';
 import './AutreArea.css'
 
 const AdminArea = ({ activeSection }) => {
   const renderSection = () => {
     switch (activeSection) {
-    
       case 'admin/home':
         return <AdminHome />
       case 'admin/liste':
@@ -17,10 +19,14 @@ const AdminArea = ({ activeSection }) => {
         return <AdminStatistique />
       case 'admin/sms':
         return <AdminSms />
-        case 'admin/profil':
+      case 'admin/profil':
         return <AdminProfil />
+      case 'admin/valide': 
+        return <AdminValide />
+      case 'admin/notifications': 
+        return <AdminNotification />
       default:
-        return <AdminHome/>
+        return <AdminHome />
     }
   }
 

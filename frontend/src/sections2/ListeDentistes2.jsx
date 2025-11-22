@@ -6,7 +6,7 @@ const ListeDentistes2 = () => {
   
   const regionsList = [
     "Alaotra Mangoro", "Antsinanana", "Anosy", "Analanjirofo", "Atsimo Andrefana",
-    "Amoron'i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
+    "Amoron i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
     "Betsiboka", "Bongolava", "Betsimisaraka", "Diana", "Haute Matsiatra",
     "Itasy", "Ihorombe", "Melaky", "Menabe", "Sofia",
     "Vakinankaratra", "Vatovavy Fitovinany"
