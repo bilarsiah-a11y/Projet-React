@@ -4,7 +4,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
-const path = require('path');
+const path = require('path'); 
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const app = express();
@@ -219,13 +219,10 @@ app.post('/Connexion', (req, res) => {
     });
   });
 });
-
-             
+ 
 //-----------------------CRUD--------------------------------------------
 
-
 // affichage cod
-
 app.get("/ListeDentistes", (req, res) => {
   const { region } = req.query;
 
@@ -361,27 +358,42 @@ app.post('/Ajouter', verifyToken, (req, res) => {
   });
 });
 
-app.put('/Modifier/:id', (req, res) => {
-  const  Values = {
-    nom, prenom, date, lieu, genre,adresse, numordre,
-    contact, autreContact, titre, domaine, region
+app.put('/Modifier/:id', verifyToken, (req, res) => {  // j’ai ajouté verifyToken, tu l’utiliseras sûrement
+  const userId = req.user.id; // si tu veux vérifier que c’est son propre profil
+
+  const {
+    Nom, Prenom, Date, Lieu, genre, Adresse,
+    NumOrdre, Contact, AutreContact, Titre, Domaine, Region, profileImage
   } = req.body;
+
+  const profilId = req.params.id;
+
   const SQL = `
-    UPDATE  profil SET Nom=? ,Prenom=?, Date=?
-     Lieu=? , genre=? ,Adresse=? , NumOrdre=?, Contact=?, AutreContact=?, 
-           Titre=?, Domaine=?, Region=?, profileImage=?  WHERE id =? `;
-    
-const id = req.params.id; 
-         db.query(SQL, [...Values,id], (err, result) => {
-    if (err) 
-      return res.status(500).json({ message: 'Erreur de lecture', 
-     details: err.sqlMessage });
-    if (result.length === 0) 
-       return res.status(404).json({ message: 'Profil non trouvé' });
-    res.json(result[0]); 
+    UPDATE profil 
+    SET Nom = ?, Prenom = ?, Date = ?, Lieu = ?, genre = ?, Adresse = ?,
+        NumOrdre = ?, Contact = ?, AutreContact = ?, Titre = ?, Domaine = ?, Region = ?, profileImage = ?
+    WHERE id = ? AND users_id = ?`;  // sécurité : on modifie seulement son propre profil
+
+  const values = [
+    Nom, Prenom, Date, Lieu, genre, Adresse,
+    NumOrdre, Contact, AutreContact, Titre, Domaine, Region, profileImage,
+    profilId, userId
+  ];
+
+  db.query(SQL, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Erreur lors de la modification', details: err.sqlMessage });
+    }
+
+    // result.affectedRows === 0 → aucun profil mis à jour
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Profil non trouvé ou vous n\'êtes pas autorisé à le modifier' });
+    }
+
+    res.json({ message: 'Profil mis à jour avec succès' });
   });
 });
-
 // ========== Statistiques
 
 const StatsService = {
@@ -450,7 +462,8 @@ app.get("/Statistiques/total", async (req, res) => {
 
 // --------- Mot de passe oublié  ---------
 
-// Route : Demande de réinitialisation (envoie le code par email)
+
+// 1. ENVOI DU CODE (CORRIGÉ : on stocke le code en clair)
 app.post('/mot-passe-oublier', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email requis' });
@@ -458,51 +471,60 @@ app.post('/mot-passe-oublier', async (req, res) => {
   try {
     const [users] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
-      // On ne dit PAS si l'email existe ou non (sécurité)
       return res.json({ success: true, message: 'Si cet email existe, un code vous a été envoyé.' });
     }
 
     const user = users[0];
+    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6 chiffres
+    const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // Générer code 6 chiffres
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const hashedCode = await bcrypt.hash(code, 10);
-    const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
-
+    // ON STOCKE LE CODE EN CLAIR (PAS DE BCRYPT !)
     await db.promise().query(
       'UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE id = ?',
-      [hashedCode, expires, user.id]
+      [code, expires, user.id]
     );
 
-    // Envoi email
-    const mailOptions = {
-      from: '"SourireGuide"',
+    await transporter.sendMail({
+      from: '"SourireGuide" <bilarsiah@gmail.com>',
       to: email,
       subject: 'Code de réinitialisation - SourireGuide',
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
-          <h2>Réinitialisation de mot de passe</h2>
-          <p>Voici votre code de validation :</p>
-          <h1 style="font-size: 48px; letter-spacing: 10px; background: #f0f0f0; padding: 20px; display: inline-block; border-radius: 10px;">
-            ${code}
-          </h1>
-          <p>Ce code expire dans <strong>10 minutes</strong>.</p>
-          <p>Si vous n'avez pas demandé cela, ignorez cet email.</p>
-        </div>
-      `
-    };
+      html: `<h1 style="font-size:48px; letter-spacing:10px;">${code}</h1><p>Valable 10 minutes.</p>`
+    });
 
-    await transporter.sendMail(mailOptions);
     res.json({ success: true, message: 'Code envoyé avec succès !' });
-
   } catch (err) {
-    console.error(err);
+    console.error('Erreur envoi code:', err);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });
 
-// Route : Vérifier le code + changer le mot de passe
-app.post('/reset-password-with-code', async (req, res) => {
+// 2. VÉRIFICATION DU CODE (CORRIGÉ)
+app.post('/verify-reset-code', async (req, res) => {
+  const { email, code } = req.body;
+
+  if (!email || !code || code.length !== 6) {
+    return res.status(400).json({ error: 'Code invalide ou manquant' });
+  }
+
+  try {
+    const [users] = await db.promise().query(
+      'SELECT * FROM users WHERE email = ? AND reset_token = ? AND reset_token_expiry > NOW()',
+      [email, code] // comparaison directe en clair
+    );
+
+    if (users.length === 0) {
+      return res.status(400).json({ error: 'Code incorrect ou expiré' });
+    }
+
+    res.json({ success: true, message: 'Code validé avec succès !' });
+  } catch (err) {
+    console.error('Erreur vérification code:', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// 3. CONFIRMATION NOUVEAU MOT DE PASSE (CORRIGÉ)
+app.post('/confirm-new-password', async (req, res) => {
   const { email, code, newPassword, confirmPassword } = req.body;
 
   if (newPassword !== confirmPassword) {
@@ -514,20 +536,15 @@ app.post('/reset-password-with-code', async (req, res) => {
 
   try {
     const [users] = await db.promise().query(
-      'SELECT * FROM users WHERE email = ? AND reset_token_expiry > NOW()',
-      [email]
+      'SELECT * FROM users WHERE email = ? AND reset_token = ? AND reset_token_expiry > NOW()',
+      [email, code]
     );
 
     if (users.length === 0) {
-      return res.status(400).json({ error: 'Code expiré ou invalide' });
+      return res.status(400).json({ error: 'Code invalide ou expiré' });
     }
 
     const user = users[0];
-    const isValid = await bcrypt.compare(code, user.reset_token);
-    if (!isValid) {
-      return res.status(400).json({ error: 'Code incorrect' });
-    }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await db.promise().query(
@@ -536,9 +553,8 @@ app.post('/reset-password-with-code', async (req, res) => {
     );
 
     res.json({ success: true, message: 'Mot de passe changé avec succès !' });
-
   } catch (err) {
-    console.error(err);
+    console.error('Erreur changement mot de passe:', err);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });

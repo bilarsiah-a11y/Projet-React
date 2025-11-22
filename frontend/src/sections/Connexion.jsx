@@ -99,117 +99,52 @@ const Connexion = () => {
     }
   };
 
-  // =================== Étape 2 : Vérification code ===================
+  // Étape 2 → Vérification du code
   const verifyCode = async (e) => {
     e.preventDefault();
     if (fullCode.length !== 6) return setMessage("Entre les 6 chiffres");
-    setLoading(true);
-    setMessage('');
+
     try {
-      const res = await Axios.post("http://localhost:3002/reset-password-with-code", {
+      const res = await Axios.post("http://localhost:3002/verify-reset-code", {
         email,
-        code: fullCode,
-        newPassword: "temp123456",
-        confirmPassword: "temp123456"
+        code: fullCode
       });
+
       if (res.data.success) {
-        setMessage("Code validé ! 🎉");
+        setMessage("Code validé ! Passe au nouveau mot de passe");
         setTimeout(() => {
           setStep(3);
           setMessage('');
         }, 1500);
       }
     } catch (err) {
-      setMessage(err.response?.data?.error || "Code invalide ou expiré");
-    } finally {
-      setLoading(false);
+      setMessage(err.response?.data?.error || "Code incorrect ou expiré");
     }
   };
 
-  // =================== Étape 3 : Nouveau mot de passe ===================
-const handleResetPassword = async (e) => {
+  // Étape 3 → Confirmation nouveau mot de passe
+  const handleResetPassword = async (e) => {
     e.preventDefault();
-    
-    // Validation côté client
-    if (newPassword !== confirmPassword) {
-      return setMessage("Les mots de passe ne correspondent pas");
-    }
-    if (newPassword.length < 6) {
-      return setMessage("Le mot de passe doit contenir au moins 6 caractères");
-    }
-
-    setLoading(true);
-    setMessage('');
+    if (newPassword !== confirmPassword) return setMessage("Les mots de passe ne correspondent pas");
+    if (newPassword.length < 6) return setMessage("Minimum 6 caractères");
 
     try {
-      console.log("Envoi des données à l'API:", {
-        email: email,
+      const res = await Axios.post("http://localhost:3002/confirm-new-password", {
+        email,
         code: fullCode,
-        newPassword: newPassword,
-        confirmPassword: confirmPassword
+        newPassword,
+        confirmPassword
       });
 
-      // Appel API avec gestion d'erreur améliorée
-      const res = await Axios.post("http://localhost:3002/reset-password-with-code", {
-        email: email,
-        code: fullCode,
-        newPassword: newPassword,
-        confirmPassword: confirmPassword
-      }, {
-        timeout: 10000, // Timeout de 10 secondes
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      console.log("Réponse API complète:", res);
-      console.log("Données de réponse:", res.data);
-
-      // Vérification du succès
-      if (res.data.success === true || res.data.message?.includes("succès")) {
-        setMessage("✅ Mot de passe changé avec succès !");
-        
-        // Redirection automatique après succès
+      if (res.data.success) {
+        setMessage("Mot de passe changé avec succès !");
         setTimeout(() => {
           resetForm();
+          setIsForgotPassword(false);
         }, 2000);
-      } else {
-        // Si l'API retourne success: false mais sans erreur spécifique
-        setMessage(res.data.message || "Erreur lors du changement de mot de passe");
       }
-
     } catch (err) {
-      console.error("Erreur détaillée:", err);
-      console.error("Réponse d'erreur:", err.response);
-      
-      // Gestion détaillée des erreurs
-      if (err.response) {
-        // Erreur avec réponse du serveur (400, 500, etc.)
-        const errorData = err.response.data;
-        console.error("Données d'erreur:", errorData);
-        
-        if (err.response.status === 400) {
-          // Bad Request - données invalides
-          setMessage(errorData.error || errorData.message || "Données invalides. Vérifiez le code et réessayez.");
-        } else if (err.response.status === 404) {
-          // Not Found
-          setMessage("Code expiré ou invalide. Veuillez demander un nouveau code.");
-        } else if (err.response.status === 500) {
-          // Internal Server Error
-          setMessage("Erreur serveur. Veuillez réessayer plus tard.");
-        } else {
-          // Autre erreur HTTP
-          setMessage(errorData.error || errorData.message || `Erreur ${err.response.status}`);
-        }
-      } else if (err.request) {
-        // Erreur de réseau (pas de réponse)
-        setMessage("Erreur de connexion au serveur. Vérifiez votre connexion internet.");
-      } else {
-        // Erreur inattendue
-        setMessage("Une erreur inattendue s'est produite : " + err.message);
-      }
-    } finally {
-      setLoading(false);
+      setMessage(err.response?.data?.error || "Erreur lors du changement");
     }
   };
 
@@ -265,9 +200,6 @@ const handleResetPassword = async (e) => {
           </>
         ) : (
           <>
-            <button className="back-btn" onClick={() => { setIsForgotPassword(false); setStep(1); setMessage(''); setCode(['', '', '', '', '', '']); }}>
-              <AiOutlineArrowLeft /> Retour à la connexion
-            </button>
             <h1>Mot de passe oublié ?</h1>
 
             {/* ÉTAPE 1 : EMAIL */}
@@ -290,7 +222,11 @@ const handleResetPassword = async (e) => {
                 <button type="submit" disabled={loading} className="btn1">
                   {loading ? "Envoi en cours..." : "Envoyer le code"}
                 </button>
+                <button className="back-btn" onClick={() => { setIsForgotPassword(false); setStep(1); setMessage(''); setCode(['', '', '', '', '', '']); }}>
+                  <AiOutlineArrowLeft /> Retour à la connexion
+                </button>
               </form>
+
             )}
 
             {/* ÉTAPE 2 : 6 CASES OTP */}
@@ -321,10 +257,10 @@ const handleResetPassword = async (e) => {
             )}
 
             {/* ÉTAPE 3 : NOUVEAUX MOTS DE PASSE */}
-             {step === 3 && (
+            {step === 3 && (
               <form onSubmit={handleResetPassword} className="auth-form">
                 <p>Crée ton nouveau mot de passe sécurisé</p>
-                
+
                 <div className="form-group">
                   <label>Nouveau mot de passe :</label>
                   <div className="input-container">
