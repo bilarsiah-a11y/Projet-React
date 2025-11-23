@@ -1,0 +1,294 @@
+/* Apropos2.css - Styles pour la page d'accueil dentiste */
+
+.dentiste-accueil {
+  min-height: 100vh;
+  background: #f8fafc; /* Remplacement du dégradé violet par un fond gris clair */
+  padding: 2rem 1rem;
+}
+
+.dentiste-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px; /* Réduction du border-radius */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Ombre plus légère */
+  overflow: hidden;
+}
+
+/* === Header du Profil === */
+.profil-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  background: white; /* Fond blanc au lieu du dégradé gris */
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.profil-identite {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.avatar-dentiste {
+  width: 80px; /* Taille réduite */
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gardé pour l'avatar seulement */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2); /* Ombre réduite */
+  border: 3px solid white;
+}
+
+.identite-info h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.specialite {
+  font-size: 1.1rem;
+  color: #4a5568;
+  margin: 0 0 1rem 0;
+  font-weight: 500;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.contact-info p {
+  margin: 0;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.contact-info span {
+  font-size: 1rem;
+}
+
+.profil-actions {
+  display: flex;
+  align-items: flex-start;
+}
+
+.btn-modifier {
+  background: #667eea;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-modifier:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+/* === Section Bienvenue === */
+.bienvenue-section {
+  padding: 2rem;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bienvenue-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.bienvenue-content h2 {
+  font-size: 1.6rem;
+  color: #1a202c;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.bienvenue-content p {
+  font-size: 1rem;
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.btn-completer {
+  background: #48bb78;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.btn-completer:hover {
+  background: #38a169;
+  transform: translateY(-1px);
+}
+
+/* === Section Erreur === */
+.error-section {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+}
+
+.error-section h2 {
+  color: #e53e3e;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.error-section p {
+  color: #4a5568;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* === Loading === */
+.loading {
+  text-align: center;
+  padding: 3rem 2rem;
+  font-size: 1.1rem;
+  color: #718096;
+  background: white;
+}
+
+.loading::after {
+  content: "...";
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60%, 100% { content: "..."; }
+}
+
+/* === Boutons d'action === */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  .dentiste-accueil {
+    padding: 1rem 0.5rem;
+  }
+  
+  .profil-header {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profil-identite {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .avatar-dentiste {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+  
+  .identite-info h1 {
+    font-size: 1.5rem;
+  }
+  
+  .bienvenue-section {
+    padding: 1.5rem;
+  }
+  
+  .bienvenue-content h2 {
+    font-size: 1.4rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-completer {
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .identite-info h1 {
+    font-size: 1.3rem;
+  }
+  
+  .specialite {
+    font-size: 1rem;
+  }
+  
+  .contact-info p {
+    font-size: 0.9rem;
+  }
+  
+  .bienvenue-content h2 {
+    font-size: 1.2rem;
+  }
+  
+  .bienvenue-content p {
+    font-size: 0.9rem;
+  }
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profil-header,
+.bienvenue-section {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* === Styles pour les données manquantes === */
+.contact-info p:empty::before {
+  content: "—";
+  color: #a0aec0;
+  font-style: italic;
+}

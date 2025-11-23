@@ -55,10 +55,10 @@ const fetchNotifications = async () => {
 
         <div className="nav-content">
           <ul className="nav-menu nav-menu-left">
-            <li><Link to="/admin/home">Accueil</Link></li>
-            <li><Link to="/admin/liste">Liste des dentistes</Link></li>
-            <li><Link to="/admin/statistique">Statistiques</Link></li>
-            <li><Link to="/admin/valide">Validations</Link></li>
+            <li><Link to="/admin/home">Tableau de bord</Link></li>
+            <li><Link to="/admin/liste">Tous les dentistes</Link></li>
+            <li><Link to="/admin/statistique">Statistiques globales</Link></li>
+            <li><Link to="/admin/valide">Inscriptions en attente</Link></li>
           </ul>
 
           <div className="nav-right">

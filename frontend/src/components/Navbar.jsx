@@ -13,8 +13,8 @@ const Navbar = () => {
 
         <ul className="nav-menu">
           <li><Link to="/apropos">Accueil </Link></li>
-          <li><Link to="/listedentistes">Liste des dentistes</Link></li>
-          <li><Link to="/statistiques">Statistiques</Link></li>
+          <li><Link to="/listedentistes">Trouver un dentiste</Link></li>
+          <li><Link to="/statistiques">Statistiques nationales</Link></li>
           <li><Link to="/connexion">Se connecter</Link></li>
           <li><Link to="/inscription">S'inscrire</Link></li>
         </ul>

@@ -107,6 +107,20 @@ const handleValidation = async (action) => {
                 <p><strong>Date d'inscription:</strong> {new Date(selectedUser.created_at).toLocaleString()}</p>
               </div>
 
+
+         <div className="admin-notes-section">
+                <label htmlFor="adminNotes">Notes de l'administrateur :</label>
+                <textarea
+                  id="adminNotes"
+                  value={adminNotes}
+                  onChange={(e) => setAdminNotes(e.target.value)}
+                  placeholder="Ajoutez vos commentaires ou notes concernant cette validation..."
+                  rows="4"
+                  className="admin-notes-textarea"
+                />
+              </div>
+
+
               <div className="action-buttons">
                 <button 
                   className="btn-approve"

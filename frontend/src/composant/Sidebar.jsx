@@ -13,8 +13,8 @@ const Sidebar = () => {
         </div>
 
         <ul className="nav-menu">
-          <li><Link to="/apropos2">À propos</Link></li>
-          <li><Link to="/listedentiste2">Liste des dentistes</Link></li>
+          <li><Link to="/apropos2">Tableau de bord</Link></li>
+          <li><Link to="/listedentiste2">Annuair </Link></li>
           <li><Link to="/statistiques2">Statistiques</Link></li>
         </ul>
         <ProfileDropdown />

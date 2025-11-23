@@ -156,3 +156,79 @@
   color: #004085;
   border: 1px solid #b3d7ff;
 }
+/* Styles pour les notes de l'admin */
+.admin-notes-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.admin-notes-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #495057;
+}
+
+.admin-notes-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.admin-notes-textarea:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.notes-help {
+  display: block;
+  margin-top: 5px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Styles pour les notes existantes */
+.existing-notes, .previous-notes {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.previous-notes {
+  background-color: #e7f3ff;
+  border-color: #b3d7ff;
+}
+
+.previous-notes p {
+  margin: 0;
+}
+
+/* Désactivation des boutons si nécessaire */
+.action-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-notes-section {
+    margin: 15px 0;
+    padding: 10px;
+  }
+  
+  .admin-notes-textarea {
+    padding: 10px;
+  }
+}

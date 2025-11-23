@@ -54,6 +54,7 @@ const ProfileDropdown = () => {
       >
         <IoPerson className="profile-icon" />
         <span className="admin-name">{dentistName}</span>
+        <span className="dropdown-arrow">▼</span>
        
       </button>
 

@@ -187,7 +187,7 @@ const Profil = () => {
           <p><strong>Autre contact :</strong> {displayValue(profildata.AutreContact)}</p>
           <p><strong>Numéro d'ordre :</strong> {displayValue(profildata.NumOrdre)}</p>
           <p><strong>Titre :</strong> {displayValue(profildata.Titre)}</p>
-          <p><strong>Domaine :</strong> {displayValue(profildata.Domaine)}</p>
+          <p><strong>Fonction :</strong> {displayValue(profildata.Domaine)}</p>
           <p><strong>Région :</strong> {displayValue(profildata.Region)}</p>
         </div>
 

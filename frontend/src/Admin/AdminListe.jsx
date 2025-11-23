@@ -1,110 +1,86 @@
-
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-//import "./Listedentiste2.css";
+// import "../sectionsCss/ListeDentistes2.css";
+
+const regionsList = [
+  "Alaotra Mangoro", "Antsinanana", "Anosy", "Analanjirofo", "Atsimo Andrefana",
+  "Amoron'i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
+  "Betsiboka", "Bongolava", "Betsimisaraka", "Diana", "Haute Matsiatra",
+  "Itasy", "Ihorombe", "Melaky", "Menabe", "Sofia",
+  "Vakinankaratra", "Vatovavy Fitovinany"
+];
 
 const AdminListe = () => {
-  
-  const regionsList = [
-    "Alaotra Mangoro", "Antsinanana", "Anosy", "Analanjirofo", "Atsimo Andrefana",
-    "Amoron'i Mania", "Atsimo Atsinanana", "Analamanga", "Androy", "Boeny",
-    "Betsiboka", "Bongolava", "Betsimisaraka", "Diana", "Haute Matsiatra",
-    "Itasy", "Ihorombe", "Melaky", "Menabe", "Sofia",
-    "Vakinankaratra", "Vatovavy Fitovinany"
-  ];
-
-  
-  const [region, setRegion] = useState(regionsList);
+  const [region, setRegion] = useState("Analamanga");
   const [dentistes, setDentistes] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // 🔄 Charger les dentistes selon la région sélectionnée
-   useEffect(() => {
+  useEffect(() => {
     const fetchDentistes = async () => {
       setLoading(true);
-      setError("");
-      
       try {
-        const url = region
-          ? `http://localhost:3002/AdminListe?region=${region}`
-          : "http://localhost:3002/AdminListe";
-        const res = await Axios.get(url);
+        const res = await Axios.get(`http://localhost:3002/ListeDentiste2?region=${region}`);
         setDentistes(res.data);
       } catch (err) {
-        console.error("Erreur chargement dentistes :", err);
-        setError("Impossible de charger les dentistes");
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    
     fetchDentistes();
   }, [region]);
-;
+
+  const getImageUrl = (profileImage) => {
+    if (!profileImage) return "/default-avatar.png";
+    if (profileImage.startsWith("http")) return profileImage;
+    return `http://localhost:3002/uploads/${profileImage}`;
+  };
 
   return (
-    <div className="liste-dentistes-page">
-      <h2>Liste des dentistes</h2>
+    <div className="annuaire-simple">
 
-      <div className="filter-container">
-        <label htmlFor="region"> Région:</label>
-        <select
-          id="region"
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-        >
-          {regionsList.map((r, index) => (
-            <option key={index} value={r}>
-              {r}
-            </option>
+      {/* TITRE SIMPLE, SANS DÉCO */}
+      <div className="header-simple">
+        <h1>ANNUAIRE DES DENTISTES</h1>
+        <p>Madagascar 2025</p>
+      </div>
+
+      {/* FILTRE */}
+      <div className="filter-simple">
+        <select value={region} onChange={(e) => setRegion(e.target.value)}>
+          {regionsList.map((r) => (
+            <option key={r} value={r}>{r}</option>
           ))}
         </select>
       </div>
 
-      {loading && <p className="loading">Chargement...</p>}
-      {error && <p className="error">{error}</p>}
-
-      <div className="dentistes-grid">
-  {dentistes.length === 0 && !loading ? (
-    <p className="no-result">
-      Pour le moment <br/>
-      Aucun dentiste trouvé pour cette région.</p>
-  ) : (
-    dentistes.map((p, index) => (
-      <div key={index} className="dentiste-card">
-        <div className="dentiste-left">
-          <img
-            src={
-              p.profileImage
-                ? `http://localhost:3002/uploads/${p.profileImage}`
-                : "/default-avatar.png"
-            }
-            alt="profil"
-            className="dentiste-avatar"
-          />
-        </div>
-        <div className="dentiste-right">
-          <h3>{p.Nom} {p.Prenom}</h3>
-          <p> {p.genre}</p>
-          <p>{p.Adresse}</p>
-          <p> {p.NumOrdre}</p>
-          <p> {p.email}</p>
-          <p> {p.Titre}</p>
-          <p> {p.Domaine}</p>
-          <p>{p.Region}</p>
-          <button>Suprimer</button>
-        </div>
+      {/* LISTE COMPACTE */}
+      <div className="liste-simple">
+        {loading ? (
+          <p className="loading">Chargement...</p>
+        ) : dentistes.length === 0 ? (
+          <p className="no-result">Aucun dentiste dans cette région pour le moment</p>
+        ) : (
+          dentistes.map((d, i) => (
+            <div key={i} className="dentiste-ligne">
+              <img
+                src={getImageUrl(d.profileImage)}
+                alt={`${d.Prenom} ${d.Nom}`}
+                className="photo-petite"
+                onError={(e) => e.target.src = "/default-avatar.png"}
+              />
+              <div className="infos">
+                <strong>{d.Titre || "Dr"} {d.Prenom} {d.Nom}</strong>
+                <span>{d.Adresse || d.Region}</span>
+                <span>Tél : {d.Contact || d.AutreContact || "Non renseigné"}</span>
+                <span>N° Ordre : {d.NumOrdre || "—"}</span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
-    ))
-  )}
-</div>
-      
-     
-
     </div>
   );
 };
 
 export default AdminListe;
-
