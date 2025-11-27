@@ -1,154 +1,244 @@
+/* Profil.css */
 .profil-section {
-  display: flex;
-  justify-content: center;
-  padding: 30px 15px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .profil-container {
-  background-color: #fff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 900px;
-  /* box-shadow: 0 5px 20px rgba(0,0,0,0.1); supprimé */
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .profil-container h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
   text-align: center;
-  margin-bottom: 25px;
-  color: #333;
+  font-size: 2rem;
+}
+
+/* Section Debug */
+.debug-section {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.debug-section h4 {
+  margin: 0 0 1rem 0;
+  color: #856404;
+}
+
+.debug-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.debug-item {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+}
+
+.debug-item pre {
+  background: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0.5rem 0 0 0;
 }
 
 /* Image de profil */
 .profile-image-section {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 25px;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e9ecef;
 }
 
 .image-container {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  /* border: 2px solid #007BFF; supprimé */
+  display: inline-block;
+  transition: transform 0.3s ease;
 }
 
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.image-container:hover {
+  transform: scale(1.05);
 }
 
-.profile-image-section input[type="file"] {
-  padding: 5px;
+/* Sections d'information */
+.user-info-section, .profil-dentiste-section {
+  margin-bottom: 2rem;
 }
 
-/* Infos utilisateur */
-.user-info-section {
-  margin-bottom: 25px;
+.user-info-section h3, .profil-dentiste-section h3 {
+  color: #3498db;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+/* Alertes */
+.alert {
+  padding: 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  border: 1px solid #2196f3;
+  color: #1976d2;
+}
+
+/* Grille d'information */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .info-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px 40px;
-  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #3498db;
 }
 
-.info-item label {
-  font-weight: 600;
-  color: #555;
-}
-
-.info-item span {
-  color: #333;
+/* Pas de profil */
+.no-profile {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+  font-style: italic;
 }
 
 /* Boutons */
-.flex {
+.button-actions {
   display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.gap-3 {
-  gap: 15px;
+.btn-update, .btn-add {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  font-size: 1rem;
 }
 
-.mt-4 {
-  margin-top: 20px;
-}
-
-.bg-blue-500 {
-  background-color: #007BFF;
-}
-
-.bg-blue-500:hover {
-  background-color: #0056b3;
-}
-
-.bg-green-600 {
-  background-color: #28a745;
-}
-
-.bg-green-700:hover {
-  background-color: #218838;
-}
-
-.text-white {
-  color: #fff;
-}
-
-.px-4 {
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-.px-6 {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-.py-2 {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.rounded {
-  border-radius: 5px;
-}
-
-.logout-btn {
-  margin-top: 30px;
-  background-color: #dc3545;
+.btn-update {
+  background-color: #3498db;
   color: white;
+}
+
+.btn-update:hover:not(.btn-disabled) {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-add {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-add:hover:not(.btn-disabled) {
+  background-color: #219a52;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-disabled {
+  background-color: #bdc3c7 !important;
+  color: #7f8c8d !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Loading */
+.loading-spinner {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Dialog actions */
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel, .btn-confirm {
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-.logout-btn:hover {
-  background-color: #c82333;
+.btn-cancel {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-confirm {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background-color: #219a52;
+}
+
+.btn-confirm:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 /* Responsive */
-@media (max-width: 700px) {
-  .info-item {
-    grid-template-columns: 1fr;
-    gap: 10px;
+@media (max-width: 768px) {
+  .profil-section {
+    padding: 1rem;
   }
-
-  .profile-image-section {
+  
+  .profil-container {
+    padding: 1rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-actions {
     flex-direction: column;
     align-items: center;
   }
-}
-p-dialog .p-dialog-header {
-  background: white !important;
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
-  border-bottom: 1px solid #e2e8f0 !important;
+  
+  .btn-update, .btn-add {
+    width: 100%;
+    max-width: 300px;
+  }
 }

@@ -24,7 +24,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Supprimer dentiste - VERSION CORRIGÉE
+// Supprimer dentiste 
 router.delete("/admin/delete/:profilId/:userId", async (req, res) => {
   const { profilId, userId } = req.params;
 

@@ -107,15 +107,12 @@ const AdminHome = () => {
                   <span className="moderation-alert">Action requise</span>
                 </div>
               </Link>
-
-              {/* Statistiques supprimées du tableau de bord */}
             </div>
           </section>
 
           {/* Profils récents */}
           <section className="profils-recents">
             <h2>👨‍⚕️ Derniers profils ajoutés</h2>
-
             <div className="profils-list">
               {profilsRecents.length > 0 ? (
                 profilsRecents.map((profil, index) => (

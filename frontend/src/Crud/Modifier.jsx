@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "./Modifier.css";
+import React, { useState, useEffect } from "react";
+import "../Crud/Modifier.css";
 import Axios from "axios";
 
-const Modifier = ({ onClose }) => {
+const Modifier = ({ onClose, profilId, currentData }) => {
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -18,6 +18,25 @@ const Modifier = ({ onClose }) => {
     region: "",
   });
 
+  useEffect(() => {
+    if (currentData) {
+  
+      setFormData({
+        nom: currentData.Nom || "",
+        prenom: currentData.Prenom || "",
+        date: currentData.Date || "",
+        lieu: currentData.Lieu || "",
+        genre: currentData.genre || "",
+        adresse: currentData.Adresse || "",
+        numordre: currentData.NumOrdre || "",
+        contact: currentData.Contact || "",
+        autreContact: currentData.AutreContact || "",
+        titre: currentData.Titre || "",
+        domaine: currentData.Domaine || "",
+        region: currentData.Region || "",
+      });
+    }
+  }, [currentData]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -27,17 +46,8 @@ const Modifier = ({ onClose }) => {
     e.preventDefault();
 
     const requiredFields = [
-      "nom",
-      "prenom",
-      "date",
-      "lieu",
-      "genre",
-      "adresse",
-      "numordre",
-      "contact",
-      "titre",
-      "domaine",
-      "region",
+      "nom", "prenom", "date", "lieu", "genre", "adresse",
+      "numordre", "contact", "titre", "domaine", "region",
     ];
 
     const emptyField = requiredFields.find((field) => !formData[field]);
@@ -47,22 +57,32 @@ const Modifier = ({ onClose }) => {
     }
 
     try {
-      const response = await Axios.post("http://localhost:3002/Modifier", formData);
+      // CORRECTION : Utiliser PUT au lieu de POST et inclure l'ID dans l'URL
+      const token = localStorage.getItem('token');
+      const response = await Axios.put(
+        `http://localhost:3002/Modifier/${profilId}`,
+        formData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
       console.log("Réponse backend :", response.data);
-      alert("Enregistrement réussi !");
+      alert("Modification réussie !");
       setTimeout(() => onClose(), 1500);
     } catch (err) {
       console.error("Erreur complète :", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Erreur lors de l'enregistrement");
+      alert(err.response?.data?.message || "Erreur lors de la modification");
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Vos informations</h2>
+        <h2>Modifier vos informations</h2>
         <form onSubmit={handleSubmit}>
-          {/* Champ texte classique */}
           <label>Nom :</label>
           <input type="text" name="nom" value={formData.nom} onChange={handleChange} required />
 
@@ -75,12 +95,11 @@ const Modifier = ({ onClose }) => {
           <label>Lieu de naissance :</label>
           <input type="text" name="lieu" value={formData.lieu} onChange={handleChange} required />
 
-          {/* Sélection du genre */}
           <label>Genre :</label>
           <select name="genre" value={formData.genre} onChange={handleChange} required>
             <option value="">-- Sélectionnez votre genre --</option>
-            <option value="Homme">Homme</option>
-            <option value="Femme">Femme</option>
+            <option value="homme">Homme</option>
+            <option value="femme">Femme</option>
           </select>
 
           <label>Adresse :</label>
@@ -95,7 +114,6 @@ const Modifier = ({ onClose }) => {
           <label>Autre contact :</label>
           <input type="text" name="autreContact" value={formData.autreContact} onChange={handleChange} />
 
-          {/* Sélection du titre */}
           <label>Titre :</label>
           <select name="titre" value={formData.titre} onChange={handleChange} required>
             <option value="">-- Sélectionnez votre titre --</option>
@@ -104,7 +122,6 @@ const Modifier = ({ onClose }) => {
             <option value="Docteur Spécialiste">Docteur Spécialiste</option>
           </select>
 
-          {/* Sélection du domaine */}
           <label>Domaine :</label>
           <select name="domaine" value={formData.domaine} onChange={handleChange} required>
             <option value="">-- Sélectionnez votre domaine --</option>
@@ -113,37 +130,37 @@ const Modifier = ({ onClose }) => {
             <option value="Libéral">Libéral</option>
           </select>
 
+          {/* CORRECTION : Changer le name de "domaine" à "region" */}
           <label>Région :</label>
-           <select name="domaine" value={formData.region} onChange={handleChange} required>
-            <option value="">-- Sélectionnez votre region --</option>
-            <option value="Alaotra Mongoro ">Alaotra Mongoro </option>
-             <option value="Antsinana">Antsinana</option>
+          <select name="region" value={formData.region} onChange={handleChange} required>
+            <option value="">-- Sélectionnez votre région --</option>
+            <option value="Alaotra Mangoro">Alaotra Mangoro</option>
+            <option value="Antsinanana">Antsinanana</option>
             <option value="Anosy">Anosy</option>
-            <option value="Analanjorofo">Analanjorofo</option>
-            <option value="Atsino andrefana">Atsino andrefana</option>
+            <option value="Analanjirofo">Analanjirofo</option>
+            <option value="Atsimo Andrefana">Atsimo Andrefana</option>
             <option value="Amoron'i Mania">Amoron'i Mania</option>
-            <option value="Antsimo antsinanana">Antsimo antsinanana</option>
-             <option value="Alaotra Mongoro ">Alaotra Mongoro </option>
-            <option value="Analamanga ">Analamanga </option>
+            <option value="Atsimo Atsinanana">Atsimo Atsinanana</option>
+            <option value="Analamanga">Analamanga</option>
             <option value="Androy">Androy</option>
-             <option value="Boeny ">Boeny </option>
-            <option value="Betsimisaraka">Betsimisaraka</option>
-            <option value="Bongolava ">Bongolava </option>
-             <option value="Diana">Diana</option>
-             <option value="haute Matsiatra ">haute Matsiatra </option>
+            <option value="Boeny">Boeny</option>
+            <option value="Betsiboka">Betsiboka</option>
+            <option value="Bongolava">Bongolava</option>
+            <option value="Diana">Diana</option>
+            <option value="Haute Matsiatra">Haute Matsiatra</option>
             <option value="Itasy">Itasy</option>
             <option value="Ihorombe">Ihorombe</option>
             <option value="Melaky">Melaky</option>
             <option value="Menabe">Menabe</option>
-            <option value="Sofia  ">Sofia  </option>
-             <option value="Vakinakratra">Vakinakratra</option>
-            <option value="Vatovavy Fitovinany ">Vatovavy Fitovinany </option>
+            <option value="Sofia">Sofia</option>
+            <option value="Vakinankaratra">Vakinankaratra</option>
+            <option value="Vatovavy Fitovinany">Vatovavy Fitovinany</option>
           </select>
 
-         <div className="button-container">
-  <button type="submit" className="btn-submit">Enregistrer</button>
-  <button type="button" onClick={onClose} className="btn-cancel">Annuler</button>
-</div>
+          <div className="button-container">
+            <button type="submit" className="btn-submit">Modifier</button>
+            <button type="button" onClick={onClose} className="btn-cancel">Annuler</button>
+          </div>
         </form>
       </div>
     </div>

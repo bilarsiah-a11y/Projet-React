@@ -17,6 +17,7 @@ const Profil = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
   const [userData, setUserData] = useState({
     profileImage: "/default-avatar.png",
@@ -25,6 +26,7 @@ const Profil = () => {
   });
 
   const [profildata, setProfilData] = useState({
+    id: "",
     Nom: "",
     Prenom: "",
     Date: "",
@@ -39,32 +41,50 @@ const Profil = () => {
     Region: "",
   });
 
+  const [hasProfile, setHasProfile] = useState(false);
+
   const displayValue = (value) => (value ? value : "—");
 
-  useEffect(() => {
+  const fetchProfile = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/apropos2");
       return;
     }
 
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.post(
-          "http://localhost:3002/Profil",
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+    setLoadingProfile(true);
+    try {
+      console.log("🔄 Début du chargement du profil...");
+      
+      const res = await axios.post(
+        "http://localhost:3002/Profil",
+        {},
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
 
-        console.log("Données reçues du backend:", res.data);
+      console.log("✅ DONNÉES BRUTES REÇUES DU BACKEND:", res.data);
+      console.log("🔍 Structure des données:", Object.keys(res.data));
+      console.log("🎯 ID profil reçu:", res.data.id);
+      console.log("👤 Nom reçu:", res.data.Nom);
 
-        setUserData({
-          profileImage: res.data.profileImage || "/default-avatar.png",
-          username: res.data.username || "",
-          email: res.data.email || "",
-        });
+      // Mettre à jour les données utilisateur
+      setUserData({
+        profileImage: res.data.profileImage || "/default-avatar.png",
+        username: res.data.username || "",
+        email: res.data.email || "",
+      });
 
+      // CONDITION CRITIQUE - Vérifier si on a un ID de profil
+      if (res.data.id) {
+        console.log("🎯 PROFIL TROUVÉ - Mise à jour de l'interface");
+        setHasProfile(true);
         setProfilData({
+          id: res.data.id,
           Nom: res.data.Nom || "",
           Prenom: res.data.Prenom || "",
           Date: res.data.Date || "",
@@ -78,19 +98,55 @@ const Profil = () => {
           Domaine: res.data.Domaine || "",
           Region: res.data.Region || "",
         });
-
-        if (res.data.profileImage) setPreview(res.data.profileImage);
-      } catch (err) {
-        console.error("Erreur chargement profil:", err);
-        console.error("Détails de l'erreur:", err.response?.data);
-        if (err.response?.status === 401 || err.response?.status === 403) {
-          handleLogout();
-        }
+      } else {
+        console.log("❌ AUCUN PROFIL - Affichage du message vide");
+        setHasProfile(false);
+        setProfilData({
+          id: "",
+          Nom: "",
+          Prenom: "",
+          Date: "",
+          Lieu: "",
+          genre: "",
+          Adresse: "",
+          NumOrdre: "",
+          Contact: "",
+          AutreContact: "",
+          Titre: "",
+          Domaine: "",
+          Region: "",
+        });
       }
-    };
 
+      if (res.data.profileImage) {
+        setPreview(res.data.profileImage);
+      }
+
+    } catch (err) {
+      console.error("❌ ERREUR COMPLÈTE:", err);
+      console.error("📨 Réponse d'erreur:", err.response?.data);
+      console.error("🔧 Message d'erreur:", err.message);
+      
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        handleLogout();
+      } else {
+        setHasProfile(false);
+      }
+    } finally {
+      setLoadingProfile(false);
+    }
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, [navigate]);
+
+  // Recharger après modification/ajout
+  useEffect(() => {
+    if (!visibleAjouter && !visibleModifier) {
+      fetchProfile();
+    }
+  }, [visibleAjouter, visibleModifier]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -141,10 +197,58 @@ const Profil = () => {
     }
   };
 
+  const handleOpenModifier = () => {
+    if (!profildata.id) {
+      alert("Aucun profil trouvé à modifier. Veuillez d'abord créer un profil.");
+      return;
+    }
+    setVisibleModifier(true);
+  };
+
+  const handleOpenAjouter = () => {
+    if (hasProfile) {
+      alert("Vous avez déjà un profil. Utilisez 'Mettre à jour' pour le modifier.");
+      return;
+    }
+    setVisibleAjouter(true);
+  };
+
+  if (loadingProfile) {
+    return (
+      <div className="profil-section">
+        <div className="profil-container">
+          <div className="loading-spinner">
+            <p>Chargement de votre profil...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="profil-section">
       <div className="profil-container">
         <h1>Mon Profil</h1>
+
+        {/* SECTION DEBUG - À GARDER TEMPORAIREMENT */}
+        <div className="debug-section">
+          <h4>🔍 Informations de Debug</h4>
+          <div className="debug-grid">
+            <div className="debug-item">
+              <strong>Profil trouvé:</strong> {hasProfile ? "OUI ✅" : "NON ❌"}
+            </div>
+            <div className="debug-item">
+              <strong>ID Profil:</strong> {profildata.id || "Aucun"}
+            </div>
+            <div className="debug-item">
+              <strong>Nom:</strong> {profildata.Nom || "Aucun"}
+            </div>
+            <div className="debug-item">
+              <strong>Données complètes:</strong> 
+              <pre>{JSON.stringify(profildata, null, 2)}</pre>
+            </div>
+          </div>
+        </div>
 
         {/* IMAGE DE PROFIL */}
         <div className="profile-image-section">
@@ -175,58 +279,107 @@ const Profil = () => {
         </div>
 
         {/* PROFIL DENTISTE */}
-        <h3>Profil complet</h3>
-        <div className="info-item">
-          <p><strong>Nom :</strong> {displayValue(profildata.Nom)}</p>
-          <p><strong>Prénom :</strong> {displayValue(profildata.Prenom)}</p>
-          <p><strong>Date de naissance :</strong> {displayValue(profildata.Date)}</p>
-          <p><strong>Lieu de naissance :</strong> {displayValue(profildata.Lieu)}</p>
-          <p><strong>Genre :</strong> {displayValue(profildata.genre)}</p>
-          <p><strong>Adresse :</strong> {displayValue(profildata.Adresse)}</p>
-          <p><strong>Contact :</strong> {displayValue(profildata.Contact)}</p>
-          <p><strong>Autre contact :</strong> {displayValue(profildata.AutreContact)}</p>
-          <p><strong>Numéro d'ordre :</strong> {displayValue(profildata.NumOrdre)}</p>
-          <p><strong>Titre :</strong> {displayValue(profildata.Titre)}</p>
-          <p><strong>Fonction :</strong> {displayValue(profildata.Domaine)}</p>
-          <p><strong>Région :</strong> {displayValue(profildata.Region)}</p>
+        <div className="profil-dentiste-section">
+          <div className="section-header">
+            <h3>Profil professionnel</h3>
+            {!hasProfile && (
+              <div className="alert alert-info">
+                <p>Vous n'avez pas encore de profil professionnel. Cliquez sur "Ajouter infos" pour créer votre profil.</p>
+              </div>
+            )}
+          </div>
+          
+          {hasProfile ? (
+            <div className="info-grid">
+              <div className="info-item">
+                <strong>Nom :</strong> {displayValue(profildata.Nom)}
+              </div>
+              <div className="info-item">
+                <strong>Prénom :</strong> {displayValue(profildata.Prenom)}
+              </div>
+              <div className="info-item">
+                <strong>Date de naissance :</strong> {displayValue(profildata.Date)}
+              </div>
+              <div className="info-item">
+                <strong>Lieu de naissance :</strong> {displayValue(profildata.Lieu)}
+              </div>
+              <div className="info-item">
+                <strong>Genre :</strong> {displayValue(profildata.genre)}
+              </div>
+              <div className="info-item">
+                <strong>Adresse :</strong> {displayValue(profildata.Adresse)}
+              </div>
+              <div className="info-item">
+                <strong>Contact :</strong> {displayValue(profildata.Contact)}
+              </div>
+              <div className="info-item">
+                <strong>Autre contact :</strong> {displayValue(profildata.AutreContact)}
+              </div>
+              <div className="info-item">
+                <strong>Numéro d'ordre :</strong> {displayValue(profildata.NumOrdre)}
+              </div>
+              <div className="info-item">
+                <strong>Titre :</strong> {displayValue(profildata.Titre)}
+              </div>
+              <div className="info-item">
+                <strong>Domaine :</strong> {displayValue(profildata.Domaine)}
+              </div>
+              <div className="info-item">
+                <strong>Région :</strong> {displayValue(profildata.Region)}
+              </div>
+            </div>
+          ) : (
+            <div className="no-profile">
+              <p>Aucune information professionnelle disponible.</p>
+            </div>
+          )}
         </div>
 
         {/* BOUTONS */}
-        <div className="flex gap-3 mt-4">
+        <div className="button-actions">
           <button
             type="button"
-            onClick={() => setVisibleModifier(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={handleOpenModifier}
+            disabled={!hasProfile}
+            className={`btn-update ${!hasProfile ? 'btn-disabled' : ''}`}
           >
             Mettre à jour
           </button>
           <button
             type="button"
-            onClick={() => setVisibleAjouter(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={handleOpenAjouter}
+            disabled={hasProfile}
+            className={`btn-add ${hasProfile ? 'btn-disabled' : ''}`}
           >
-            Ajouter infos
+            {hasProfile ? "Profil déjà créé" : "Ajouter infos"}
           </button>
         </div>
       </div>
 
       {/* DIALOG AJOUT */}
       <Dialog 
-        header={null}
+        header="Créer votre profil professionnel"
         visible={visibleAjouter} 
         onHide={() => setVisibleAjouter(false)} 
         style={{ width: "70vw" }}
+        className="custom-dialog"
       >
         <Ajouter onClose={() => setVisibleAjouter(false)} />
       </Dialog>
 
       {/* DIALOG MODIFICATION */}
       <Dialog 
+        header="Modifier votre profil professionnel"
         visible={visibleModifier} 
         onHide={() => setVisibleModifier(false)} 
         style={{ width: "70vw" }}
+        className="custom-dialog"
       >
-        <Modifier onClose={() => setVisibleModifier(false)} />
+        <Modifier 
+          onClose={() => setVisibleModifier(false)}
+          profilId={profildata.id}
+          currentData={profildata}
+        />
       </Dialog>
 
       {/* DIALOG IMAGE */}
@@ -235,9 +388,9 @@ const Profil = () => {
         visible={imageDialog}
         onHide={() => setImageDialog(false)}
         style={{ width: "60vw" }}
+        className="custom-dialog"
       >
         <div style={{ textAlign: "center" }}>
-          {/* Aperçu de l'image sélectionnée */}
           {preview && (
             <>
               <h4>Nouvelle image de profil</h4>
@@ -254,21 +407,21 @@ const Profil = () => {
               <p>Cette image remplacera votre photo de profil actuelle</p>
             </>
           )}
-          <button
-            onClick={saveCroppedImage}
-            disabled={loading}
-            style={{
-              marginTop: "15px",
-              backgroundColor: "#28a745",
-              color: "#fff",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
-          >
-            {loading ? "Enregistrement..." : "Confirmer l'image"}
-          </button>
+          <div className="dialog-actions">
+            <button
+              onClick={() => setImageDialog(false)}
+              className="btn-cancel"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={saveCroppedImage}
+              disabled={loading}
+              className="btn-confirm"
+            >
+              {loading ? "Enregistrement..." : "Confirmer l'image"}
+            </button>
+          </div>
         </div>
       </Dialog>
     </div>
