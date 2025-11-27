@@ -11,7 +11,7 @@ const regionsList = [
 ];
 
 const ListeDentistes = () => {
-  const [region, setRegion] = useState("Analamanga");
+  const [region, setRegion] = useState("Alaotra Mangoro");
   const [dentistes, setDentistes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +57,7 @@ const ListeDentistes = () => {
       {/* LISTE COMPACTE */}
       <div className="liste-simple">
         {loading ? (
-          <p className="loading">Chargement...</p>
+          <p className="loading">Chargement</p>
         ) : dentistes.length === 0 ? (
           <p className="no-result">Aucun dentiste dans cette région pour le moment</p>
         ) : (
@@ -72,8 +72,8 @@ const ListeDentistes = () => {
               <div className="infos">
                 <strong>{d.Titre || "Dr"} {d.Prenom} {d.Nom}</strong>
                 <span>{d.Adresse || d.Region}</span>
-                <span>Tél : {d.Contact || d.AutreContact || "Non renseigné"}</span>
-                <span>N° Ordre : {d.NumOrdre || "—"}</span>
+                <span>{d.Contact  || d.AutreContact || "Non renseigné"}</span>
+                <span> {d.NumOrdre || "—"}</span>
               </div>
             </div>
           ))

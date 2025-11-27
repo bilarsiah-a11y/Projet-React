@@ -34,7 +34,7 @@ const AdminProfileDropdown = () => {
   }, []);
 
   const handleLogout = () => {
-    if (window.confirm("Se déconnecter ?")) {
+    if (window.confirm("Vous-voulez vraiment déconnecter ?")) {
       localStorage.removeItem("token");
       navigate("/apropos", { replace: true });
     }

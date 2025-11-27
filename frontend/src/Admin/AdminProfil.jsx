@@ -15,6 +15,9 @@ const AdminProfil = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [userData, setUserData] = useState({
     profileImage: "/default-avatar.png",
@@ -97,106 +100,204 @@ const AdminProfil = () => {
       setUserData((prev) => ({ ...prev, profileImage: res.data.profileImage }));
       setImageDialog(false);
       setSelectedFile(null);
-      alert("Image mise à jour !");
+      
+      // Notification stylée
+      alert("Image de profil mise à jour avec succès !");
     } catch (err) {
       console.error("Erreur upload:", err);
-      alert("Erreur lors de l'upload");
+      alert("Erreur lors de l'upload de l'image");
     } finally {
       setLoading(false);
     }
   };
 
+  const handlePasswordUpdate = async () => {
+    if (newPassword !== confirmPassword) {
+      alert("Les mots de passe ne correspondent pas !");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      alert("Le mot de passe doit contenir au moins 6 caractères");
+      return;
+    }
+
+    setLoading(true);
+    const token = localStorage.getItem("token");
+
+    try {
+      const res = await axios.put(
+        "http://localhost:3002/update-password",
+        { newPassword },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (res.status === 200) {
+        alert("Mot de passe mis à jour avec succès !");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch (err) {
+      console.error("Erreur mise à jour mot de passe:", err);
+      alert("Erreur lors de la mise à jour du mot de passe");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const maskPassword = (password) => {
+    return "•".repeat(password.length > 0 ? 12 : 0);
+  };
+
   return (
     <div className="profil-section">
       <div className="profil-container">
-        <h1>Mon Profil</h1>
+        {/* HEADER */}
+        <div className="profile-header">
+          <h1>Mon Profil Administrateur</h1>
+          <p>Gérez vos informations personnelles et votre sécurité</p>
+        </div>
 
-        {/* IMAGE DE PROFIL */}
-        <div className="profile-image-section">
-          <div className="image-container" onClick={handleAvatarClick} style={{ cursor: "pointer" }}>
-            <Avatar
-              src={userData.profileImage}
-              name={userData.username || "Admin"}
-              size="150"
-              round={true}
-              className="profile-image"
-            />
+        <div className="profile-content">
+          {/* COLONNE GAUCHE - PHOTO ET INFORMATIONS */}
+          <div className="left-column">
+            {/* CARD PHOTO DE PROFIL */}
+            <div className="profile-card">
+              <div className="card-header">
+                <h3>Photo de Profil</h3>
+              </div>
+              <div className="card-body">
+                <div className="profile-image-section">
+                  <div className="image-container" onClick={handleAvatarClick}>
+                    <Avatar
+                      src={userData.profileImage}
+                      name={userData.username || "Admin"}
+                      size="150"
+                      round={true}
+                      className="profile-image"
+                    />
+                    <div className="image-overlay">
+                      <i className="pi pi-camera"></i>
+                    </div>
+                  </div>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={onFileChange} 
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                  />
+                  <p className="image-help-text">
+                    Cliquez sur l'avatar pour changer la photo
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* CARD INFORMATIONS PERSONNELLES */}
+            <div className="profile-card">
+              <div className="card-header">
+                <h3>Informations Personnelles</h3>
+              </div>
+              <div className="card-body">
+                <div className="info-item">
+                  <label>Nom d'utilisateur</label>
+                  <div className="info-value">{displayValue(userData.username)}</div>
+                </div>
+                <div className="info-item">
+                  <label>Adresse Email</label>
+                  <div className="info-value">{displayValue(userData.email)}</div>
+                </div>
+                <div className="info-item">
+                  <label>Rôle</label>
+                  <div className="info-value role-badge">Administrateur</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={onFileChange} 
-            ref={fileInputRef}
-            style={{ display: "none" }}
-          />
-          <p style={{ marginTop: "10px", color: "#666" }}>Cliquez sur l'avatar pour changer la photo</p>
-        </div>
 
-        {/* INFOS UTILISATEUR */}
-        <div className="user-info-section">
-          <h3>Informations Admin</h3>
-          <p><strong>Pseudonyme :</strong> {displayValue(userData.username)}</p>
-          <p><strong>Email :</strong> {displayValue(userData.email)}</p>
-          <p><strong>Mot de passe :</strong> {displayValue(userData.password)}</p>
-        </div>
+        
+          <div className="right-column">
 
-        {/* BOUTONS */}
-        <div className="flex gap-3 mt-4">
-          <button
-            type="button"
-            onClick={() => setVisibleModifier(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Mettre à jour
-          </button>
+    
+            {/* CARD ACTIONS */}
+            <div className="profile-card actions-card">
+              <div className="card-header">
+                <h3>Actions</h3>
+              </div>
+              <div className="card-body">
+                <button
+                  type="button"
+                  onClick={() => setVisibleModifier(true)}
+                  className="action-btn primary"
+                >
+                  <i className="pi pi-user-edit"></i>
+                  Modifier le profil
+                </button>
+                
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* DIALOG MODIFICATION */}
-      <Dialog visible={visibleModifier} onHide={() => setVisibleModifier(false)} style={{ width: "70vw" }}>
+      <Dialog 
+        visible={visibleModifier} 
+        onHide={() => setVisibleModifier(false)} 
+        style={{ width: "90vw", maxWidth: "600px" }}
+        header={null}
+        closable={false}
+        className="modifier-dialog"
+      >
         <ModifierAdmin onClose={() => setVisibleModifier(false)} />
       </Dialog>
 
       {/* DIALOG IMAGE */}
       <Dialog
-        header="Aperçu de l'image"
+        header={null}
         visible={imageDialog}
         onHide={() => setImageDialog(false)}
-        style={{ width: "60vw" }}
+        style={{ width: "500px" }}
       >
-        <div style={{ textAlign: "center" }}>
-          {/* Aperçu de l'image sélectionnée */}
+        <div className="image-preview-dialog">
           {preview && (
             <>
-              <h4>Nouvelle image de profil</h4>
-              <Avatar
-                src={preview}
-                name={userData.username || "Admin"}
-                size="200"
-                round={true}
-                style={{
-                  margin: "20px auto",
-                  display: "block"
-                }}
-              />
-              <p>Cette image remplacera votre photo de profil actuelle</p>
+              <div className="preview-image-container">
+                <Avatar
+                  src={preview}
+                  name={userData.username || "Admin"}
+                  size="200"
+                  round={true}
+                />
+              </div>
+              <p className="preview-text">
+                Cette image remplacera votre photo de profil actuelle
+              </p>
             </>
           )}
-          <button
-            onClick={saveCroppedImage}
-            disabled={loading}
-            style={{
-              marginTop: "15px",
-              backgroundColor: "#28a745",
-              color: "#fff",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            {loading ? "Enregistrement..." : "Confirmer l'image"}
-          </button>
+          <div className="dialog-actions">
+            <button
+              onClick={() => setImageDialog(false)}
+              className="cancel-btn"
+            >
+              Annuler
+            </button>
+            <button
+              onClick={saveCroppedImage}
+              disabled={loading}
+              className="confirm-btn"
+            >
+              {loading ? (
+                <>
+                  <i className="pi pi-spin pi-spinner"></i>
+                  Enregistrement
+                </>
+              ) : (
+                "Confirmer l'image"
+              )}
+            </button>
+          </div>
         </div>
       </Dialog>
     </div>

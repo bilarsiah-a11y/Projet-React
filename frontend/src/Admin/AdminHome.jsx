@@ -15,31 +15,32 @@ const AdminHome = () => {
   const [profilsRecents, setProfilsRecents] = useState([]);
   
   useEffect(() => {
-    // CORRECTION : Ajout du / manquant dans les URLs
     axios.get("http://localhost:3002/admin/stats")
       .then(res => {
-        console.log("Stats reçues:", res.data); // Pour debug
+        console.log("Stats reçues:", res.data);
         setStats(res.data);
       })
       .catch(err => console.log("Erreur stats:", err));
 
     axios.get("http://localhost:3002/admin/recent")
       .then(res => {
-        console.log("Profils récents reçus:", res.data); // Pour debug
+        console.log("Profils récents reçus:", res.data);
         setProfilsRecents(res.data);
       })
       .catch(err => console.log("Erreur profils récents:", err));
   }, []);
 
-  // Fonction pour formater le nom complet
   const getNomComplet = (profil) => {
     return `${profil.Prenom || ''} ${profil.Nom || ''}`.trim();
   };
 
-  // Fonction pour les initiales
   const getInitiales = (profil) => {
     const nomComplet = getNomComplet(profil);
     return nomComplet.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
+  const handleGenerateReport = () => {
+    alert('Génération du rapport mensuel en cours...');
   };
 
   return (
@@ -49,17 +50,46 @@ const AdminHome = () => {
         {/* Header */}
         <header className="admin-header">
           <div className="admin-welcome">
-            <h1>Gestion des Profils Dentistes</h1>
-            <p>Administration de la plateforme SourireGuide</p>
+            <h1>Tableau de Bord Administrateur</h1>
+            <p>Gestion de la plateforme SourireGuide</p>
           </div>
 
           <div className="admin-actions">
             <Link to="/admin/liste" className="btn-admin primary">
               ⚡ Valider les profils ({stats.pending})
             </Link>
-            <button className="btn-admin secondary">📊 Rapport mensuel</button>
+            <button className="btn-admin secondary" onClick={handleGenerateReport}>
+              📊 Rapport mensuel
+            </button>
           </div>
         </header>
+
+        {/* STATS RAPIDES */}
+        <div className="quick-stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon total">👨‍⚕️</div>
+            <div className="stat-content">
+              <h3>Total Dentistes</h3>
+              <span className="stat-number">{stats.totalDentistes}</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon pending">⏳</div>
+            <div className="stat-content">
+              <h3>En Attente</h3>
+              <span className="stat-number">{stats.pending}</span>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon regions">🗺️</div>
+            <div className="stat-content">
+              <h3>Régions</h3>
+              <span className="stat-number">{stats.regions}/22</span>
+            </div>
+          </div>
+        </div>
 
         {/* CONTENT GRID */}
         <div className="admin-content-grid">
@@ -78,7 +108,7 @@ const AdminHome = () => {
                 </div>
               </Link>
 
-              
+              {/* Statistiques supprimées du tableau de bord */}
             </div>
           </section>
 
@@ -90,18 +120,10 @@ const AdminHome = () => {
               {profilsRecents.length > 0 ? (
                 profilsRecents.map((profil, index) => (
                   <div key={index} className="profil-item">
-                    <div className="profil-avatar">
-                      {getInitiales(profil)}
-                    </div>
-
+                    <div className="profil-avatar">{getInitiales(profil)}</div>
                     <div className="profil-info">
                       <h4>{getNomComplet(profil)}</h4>
-                      <p>Dentiste</p>
-                      <span className="profil-region">📍 {profil.Region || "Inconnue"}</span>
-                    </div>
-
-                    <div className="profil-date">
-                      {profil.created_at ? new Date(profil.created_at).toLocaleDateString("fr-FR") : "Date inconnue"}
+                      <p>{profil.Region}</p>
                     </div>
                   </div>
                 ))
@@ -109,36 +131,12 @@ const AdminHome = () => {
                 <p>Aucun profil récent.</p>
               )}
             </div>
-
-            <Link to="/admin/liste" className="voir-plus">
-              Voir tous les profils →
-            </Link>
           </section>
 
         </div>
-
-        {/* OUTILS ADMIN */}
-        <section className="admin-tools">
-          <h2>🛠️ Outils d'administration</h2>
-
-          <div className="tools-grid">
-            
-
-            <Link to="/admin/liste" className="tool-card">
-              <div className="tool-icon">🎯</div>
-              <span>Spécialités dentaires</span>
-            </Link>
-
-            <Link to="/admin/analytics" className="tool-card">
-              <div className="tool-icon">📊</div>
-              <span>Analytics détaillés</span>
-            </Link>
-          </div>
-        </section>
       </div>
     </div>
   );
 };
 
 export default AdminHome;
-

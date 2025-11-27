@@ -1,62 +1,184 @@
 .Statistiques {
-  padding: 1.5rem;
-  min-height: calc(100vh - 100px);
-  margin-top: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%);
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.Statistiques::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at top left, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at bottom right, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.statistiques-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .statistiques-title {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #2c3e50;
-  font-size: 1.8rem;
+  font-size: 2.2rem;
+  color:  #17a2b8;
+  margin-bottom: 8px;
   font-weight: 700;
+  background: linear-gradient(135deg,  #17a2b8 0%, #7e5bef 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.statistiques-subtitle {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 0;
+  font-weight: 400;
 }
 
 .Statistiques-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 0;
-  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 30px auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
 }
 
-.loading, .error {
+/* Section des statistiques avancées */
+.advanced-stats-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Styles de chargement */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  position: relative;
+  z-index: 1;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0f2fe;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.loading-text {
+  font-size: 1.1rem;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Styles d'erreur */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
   text-align: center;
-  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.error-icon {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+}
+
+.error-text {
   font-size: 1.2rem;
+  color: #dc2626;
+  margin-bottom: 20px;
+  font-weight: 500;
 }
 
-.loading {
-  color: #666;
+.retry-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #7e5bef 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.error {
-  color: #e74c3c;
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
-.Statistiques-grid > * {
-  height: 170px;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .Statistiques {
-    padding: 1rem;
+    padding: 15px;
+  }
+  
+  .statistiques-title {
+    font-size: 1.8rem;
+  }
+  
+  .statistiques-subtitle {
+    font-size: 1rem;
   }
   
   .Statistiques-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .advanced-stats-section {
+    padding: 0 10px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Statistiques {
+    padding: 10px;
+  }
+  
+  .statistiques-header {
+    padding: 15px 10px;
   }
   
   .statistiques-title {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .Statistiques-grid > * {
-    height: 160px;
   }
 }
