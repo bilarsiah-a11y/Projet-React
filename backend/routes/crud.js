@@ -34,14 +34,13 @@ router.post('/upload-profile-image', verifyToken,
   }
 });
 
-// PROFIL UTILISATEUR - VERSION COMPLÈTEMENT CORRIGÉE
-router.post('/Profil', verifyToken, async (req, res) => {
+// PROFIL UTILISATEUR - VERSION ÉPURÉE
+router.post('/Users', verifyToken, async (req, res) => {
   const userId = req.user.id;
   
-  console.log('🔄 Récupération profil pour user ID:', userId);
+  console.log('🔄 Chargement profil user ID:', userId);
 
   try {
-    // REQUÊTE SIMPLIFIÉE et GARANTIE
     const SQL = `
       SELECT 
         p.id,
@@ -57,89 +56,130 @@ router.post('/Profil', verifyToken, async (req, res) => {
         p.Titre, 
         p.Domaine, 
         p.Region,
+        p.users_id,
         u.username, 
         u.email, 
         u.profileImage
       FROM users u
       LEFT JOIN profil p ON u.id = p.users_id
       WHERE u.id = ?
-      LIMIT 1
     `;
-    
-    console.log('📋 Requête SQL:', SQL);
-    console.log('🔑 Paramètre user ID:', userId);
     
     const [results] = await db.execute(SQL, [userId]);
     
-    console.log('📊 Résultats bruts de la requête:', results);
-    
     if (results.length === 0) {
-      console.log('❌ Aucun utilisateur trouvé avec ID:', userId);
-      return res.status(404).json({ message: "Utilisateur non trouvé.", alertType: 'error' });
+      console.log('❌ Utilisateur non trouvé ID:', userId);
+      return res.status(404).json({ 
+        message: "Utilisateur non trouvé.", 
+        alertType: 'error' 
+      });
     }
 
     const userData = results[0];
-    console.log('✅ Données complètes trouvées:', userData);
-    
+
     // Vérifier si un profil existe
-    const hasProfil = !!userData.id; // L'id de la table profil
+    const hasProfil = userData.id !== null && userData.users_id !== null;
     
+    console.log('✅ Profil trouvé:', hasProfil);
+
     if (hasProfil) {
-      console.log('🎯 PROFIL TROUVÉ - ID:', userData.id);
+      res.json({
+        id: userData.id,
+        Nom: userData.Nom,
+        Prenom: userData.Prenom,
+        Date: userData.Date,
+        Lieu: userData.Lieu,
+        genre: userData.genre,
+        Adresse: userData.Adresse,
+        NumOrdre: userData.NumOrdre,
+        Contact: userData.Contact,
+        AutreContact: userData.AutreContact,
+        Titre: userData.Titre,
+        Domaine: userData.Domaine,
+        Region: userData.Region,
+        username: userData.username,
+        email: userData.email,
+        profileImage: userData.profileImage,
+        hasProfil: true
+      });
     } else {
-      console.log('ℹ️ Utilisateur trouvé mais AUCUN profil associé');
+      res.json({
+        id: null,
+        Nom: null,
+        Prenom: null,
+        Date: null,
+        Lieu: null,
+        genre: null,
+        Adresse: null,
+        NumOrdre: null,
+        Contact: null,
+        AutreContact: null,
+        Titre: null,
+        Domaine: null,
+        Region: null,
+        username: userData.username,
+        email: userData.email,
+        profileImage: userData.profileImage,
+        hasProfil: false
+      });
     }
     
-    // Retourner TOUJOURS les données
-    res.json(userData);
-    
   } catch (err) {
-    console.error('❌ Erreur récupération profil:', err);
-    console.error('❌ Message erreur:', err.message);
-    console.error('❌ Code erreur:', err.code);
+    console.error('❌ Erreur récupération profil:', err.message);
     res.status(500).json({ 
-      message: "Erreur serveur.", 
-      details: err.sqlMessage, 
+      message: "Erreur serveur lors de la récupération du profil.", 
+      details: err.sqlMessage || err.message,
       alertType: 'error' 
     });
   }
 });
 
-// ROUTE DEBUG - Pour tester directement
-router.get('/profil-debug/:userId', async (req, res) => {
-  const userId = req.params.userId;
-  
-  console.log('🔍 DEBUG - User ID reçu:', userId);
-  
+// Route pour récupérer un profil spécifique par ID
+router.get('/profil/:id', verifyToken, async (req, res) => {
+  const profilId = req.params.id;
+  const userId = req.user.id;
+
+  console.log('🔍 Récupération profil ID:', profilId);
+
   try {
-    // Requête utilisateur
-    const userSQL = 'SELECT id, username, email, profileImage FROM users WHERE id = ?';
-    const [userResults] = await db.execute(userSQL, [userId]);
-    console.log('👤 Résultat utilisateur:', userResults);
-
-    // Requête profil
-    const profilSQL = 'SELECT * FROM profil WHERE users_id = ?';
-    const [profilResults] = await db.execute(profilSQL, [userId]);
-    console.log('📄 Résultat profil:', profilResults);
-
-    const response = {
-      user: userResults[0] || null,
-      profil: profilResults[0] || null,
-      combined: {
-        ...(userResults[0] || {}),
-        ...(profilResults[0] || {})
-      },
-      message: `Debug pour user ID: ${userId}`
-    };
+    const SQL = `
+      SELECT 
+        p.id,
+        p.Nom, 
+        p.Prenom, 
+        p.Date, 
+        p.Lieu, 
+        p.genre, 
+        p.Adresse,
+        p.Contact, 
+        p.AutreContact, 
+        p.NumOrdre, 
+        p.Titre, 
+        p.Domaine, 
+        p.Region,
+        p.users_id
+      FROM profil p
+      WHERE p.id = ? AND p.users_id = ?
+      LIMIT 1
+    `;
     
-    console.log('📦 Réponse debug complète:', response);
-    res.json(response);
+    const [results] = await db.execute(SQL, [profilId, userId]);
+    
+    if (results.length === 0) {
+      return res.status(404).json({ 
+        message: "Profil non trouvé.", 
+        alertType: 'error' 
+      });
+    }
+
+    res.json(results[0]);
     
   } catch (err) {
-    console.error('❌ Erreur debug:', err);
+    console.error('❌ Erreur récupération profil spécifique:', err.message);
     res.status(500).json({ 
-      error: err.message,
-      sqlError: err.sqlMessage 
+      message: "Erreur serveur.", 
+      details: err.sqlMessage, 
+      alertType: 'error' 
     });
   }
 });
@@ -168,6 +208,7 @@ router.get("/ListeDentistes", async (req, res) => {
     const [result] = await db.execute(SQL, params);
     res.json(result);
   } catch (err) {
+    console.error('❌ Erreur liste dentistes:', err.message);
     res.status(500).json({ message: "Erreur de lecture", details: err.sqlMessage, alertType: 'error' });
   }
 });
@@ -195,11 +236,12 @@ router.get("/ListeDentiste2", async (req, res) => {
     const [result] = await db.execute(SQL, params);
     res.json(result);
   } catch (err) {
+    console.error('❌ Erreur liste dentistes 2:', err.message);
     res.status(500).json({ message: "Erreur de lecture", details: err.sqlMessage, alertType: 'error' });
   }
 });
 
-// Ajouter profil - CORRIGÉ
+// Ajouter profil
 router.post('/Ajouter', verifyToken, async (req, res) => {
   const userId = req.user.id;
   const {
@@ -207,7 +249,7 @@ router.post('/Ajouter', verifyToken, async (req, res) => {
     numordre, contact, autreContact, titre, domaine, region
   } = req.body;
 
-  console.log('📝 Données reçues pour ajout:', req.body);
+  console.log('📝 Ajout profil user ID:', userId);
 
   if (!nom || !prenom || !date || !lieu || !genre || !adresse || !numordre || !contact || !titre || !domaine || !region) {
     return res.status(400).json({ 
@@ -216,7 +258,6 @@ router.post('/Ajouter', verifyToken, async (req, res) => {
     });
   }
 
-  // Vérifier si un profil existe déjà
   const checkSQL = 'SELECT id FROM profil WHERE users_id = ?';
   
   try {
@@ -242,9 +283,9 @@ router.post('/Ajouter', verifyToken, async (req, res) => {
       numordre, contact, autreContact, titre, domaine, region
     ];
 
-    console.log('💾 Insertion avec valeurs:', values);
-
     const [result] = await db.execute(insertSQL, values);
+    
+    console.log('✅ Profil ajouté ID:', result.insertId);
     
     res.json({ 
       message: 'Profil ajouté avec succès', 
@@ -252,7 +293,7 @@ router.post('/Ajouter', verifyToken, async (req, res) => {
       profilId: result.insertId
     });
   } catch (err) {
-    console.error('❌ Erreur ajout profil:', err);
+    console.error('❌ Erreur ajout profil:', err.message);
     res.status(500).json({ 
       message: 'Erreur lors de l\'ajout', 
       details: err.sqlMessage, 
@@ -261,7 +302,7 @@ router.post('/Ajouter', verifyToken, async (req, res) => {
   }
 });
 
-// Modifier profil - CORRIGÉ
+// Modifier profil
 router.put('/Modifier/:id', verifyToken, async (req, res) => {
   const userId = req.user.id;
   const profilId = req.params.id;
@@ -272,7 +313,6 @@ router.put('/Modifier/:id', verifyToken, async (req, res) => {
   } = req.body;
 
   console.log('✏️ Modification profil ID:', profilId);
-  console.log('📝 Données reçues:', req.body);
 
   const SQL = `
     UPDATE profil 
@@ -296,12 +336,14 @@ router.put('/Modifier/:id', verifyToken, async (req, res) => {
       });
     }
 
+    console.log('✅ Profil modifié ID:', profilId);
+
     res.json({ 
       message: 'Profil mis à jour avec succès', 
       alertType: 'success'
     });
   } catch (err) {
-    console.error('❌ Erreur modification profil:', err);
+    console.error('❌ Erreur modification profil:', err.message);
     res.status(500).json({ 
       message: 'Erreur lors de la modification', 
       details: err.sqlMessage, 

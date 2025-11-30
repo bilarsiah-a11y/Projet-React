@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../Crud/Ajouter.css";
 import Axios from "axios";
 
-const Ajouter = ({ onClose }) => {
+const Ajouter = ({ onClose, onSuccess }) => {
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -14,7 +14,7 @@ const Ajouter = ({ onClose }) => {
     contact: "",
     autreContact: "",
     titre: "",
-    domaine: "", // IMPORTANT: Ce champ doit être rempli
+    domaine: "",
     region: "",
   });
 
@@ -25,7 +25,7 @@ const Ajouter = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const requiredFields = [
       "nom", "prenom", "date", "lieu", "genre", "adresse",
       "numordre", "contact", "titre", "domaine", "region",
@@ -37,19 +37,19 @@ const Ajouter = ({ onClose }) => {
       return;
     }
 
-    try {
-      const token = localStorage.getItem('token');
+   try {
       const response = await Axios.post(
-        "http://localhost:3002/Ajouter",
+        'http://localhost:3002/Ajouter',
         formData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
+        { headers: { 'Authorization': `Bearer ${token}` } }
       );
       
+      console.log("✅ Réponse backend :", response.data);
+      alert("Profil créé avec succès !");
+
+       if (onSuccess) {
+        onSuccess();
+      }
       console.log("Réponse backend:", response.data);
       alert("Profil créé avec succès !");
       setTimeout(() => onClose(), 1500);
@@ -105,7 +105,7 @@ const Ajouter = ({ onClose }) => {
           </select>
 
           {/* CHAMP DOMAINE - BIEN CONFIGURÉ */}
-          <label>Domaine :</label>
+          <label>Fonction :</label>
           <select name="domaine" value={formData.domaine} onChange={handleChange} required>
             <option value="">-- Sélectionnez --</option>
             <option value="Fonctionnaire">Fonctionnaire</option>

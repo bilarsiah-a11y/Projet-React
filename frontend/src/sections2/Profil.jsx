@@ -1,3 +1,4 @@
+// Profil.jsx
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { Dialog } from "primereact/dialog";
 import Avatar from 'react-avatar';
 import Modifier from "../Crud/Modifier";
 import Ajouter from "../Crud/Ajouter";
+import AfficherProfil from "../Crud/AfficherProfil"; 
 import "../sections2Css/Profil.css";
 
 const Profil = () => {
@@ -43,8 +45,7 @@ const Profil = () => {
 
   const [hasProfile, setHasProfile] = useState(false);
 
-  const displayValue = (value) => (value ? value : "—");
-
+  // FONCTION ÉPURÉE POUR CHARGER LE PROFIL
   const fetchProfile = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -54,10 +55,8 @@ const Profil = () => {
 
     setLoadingProfile(true);
     try {
-      console.log("🔄 Début du chargement du profil...");
-      
       const res = await axios.post(
-        "http://localhost:3002/Profil",
+        "http://localhost:3002/Users",
         {},
         { 
           headers: { 
@@ -67,39 +66,28 @@ const Profil = () => {
         }
       );
 
-      console.log("✅ DONNÉES BRUTES REÇUES DU BACKEND:", res.data);
-      console.log("🔍 Structure des données:", Object.keys(res.data));
-      console.log("🎯 ID profil reçu:", res.data.id);
-      console.log("👤 Nom reçu:", res.data.Nom);
+      console.log("✅ Profil chargé:", res.data.hasProfil ? "OUI" : "NON");
 
-      // Mettre à jour les données utilisateur
-      setUserData({
-        profileImage: res.data.profileImage || "/default-avatar.png",
-        username: res.data.username || "",
-        email: res.data.email || "",
-      });
+      const hasValidProfile = res.data && res.data.hasProfil && res.data.Nom;
 
-      // CONDITION CRITIQUE - Vérifier si on a un ID de profil
-      if (res.data.id) {
-        console.log("🎯 PROFIL TROUVÉ - Mise à jour de l'interface");
+      if (hasValidProfile) {
         setHasProfile(true);
         setProfilData({
           id: res.data.id,
-          Nom: res.data.Nom || "",
-          Prenom: res.data.Prenom || "",
-          Date: res.data.Date || "",
-          Lieu: res.data.Lieu || "",
-          genre: res.data.genre || "",
-          Adresse: res.data.Adresse || "",
-          NumOrdre: res.data.NumOrdre || "",
-          Contact: res.data.Contact || "",
-          AutreContact: res.data.AutreContact || "",
-          Titre: res.data.Titre || "",
-          Domaine: res.data.Domaine || "",
-          Region: res.data.Region || "",
+          Nom: res.data.Nom,
+          Prenom: res.data.Prenom,
+          Date: res.data.Date,
+          Lieu: res.data.Lieu,
+          genre: res.data.genre,
+          Adresse: res.data.Adresse,
+          NumOrdre: res.data.NumOrdre,
+          Contact: res.data.Contact,
+          AutreContact: res.data.AutreContact,
+          Titre: res.data.Titre,
+          Domaine: res.data.Domaine,
+          Region: res.data.Region,
         });
       } else {
-        console.log("❌ AUCUN PROFIL - Affichage du message vide");
         setHasProfile(false);
         setProfilData({
           id: "",
@@ -118,20 +106,19 @@ const Profil = () => {
         });
       }
 
+      setUserData({
+        profileImage: res.data.profileImage || "/default-avatar.png",
+        username: res.data.username || "",
+        email: res.data.email || "",
+      });
+
       if (res.data.profileImage) {
         setPreview(res.data.profileImage);
       }
 
     } catch (err) {
-      console.error("❌ ERREUR COMPLÈTE:", err);
-      console.error("📨 Réponse d'erreur:", err.response?.data);
-      console.error("🔧 Message d'erreur:", err.message);
-      
-      if (err.response?.status === 401 || err.response?.status === 403) {
-        handleLogout();
-      } else {
-        setHasProfile(false);
-      }
+      console.error("❌ Erreur chargement profil:", err.message);
+      setHasProfile(false);
     } finally {
       setLoadingProfile(false);
     }
@@ -141,12 +128,10 @@ const Profil = () => {
     fetchProfile();
   }, [navigate]);
 
-  // Recharger après modification/ajout
-  useEffect(() => {
-    if (!visibleAjouter && !visibleModifier) {
-      fetchProfile();
-    }
-  }, [visibleAjouter, visibleModifier]);
+  const handleProfileUpdate = () => {
+    console.log("🔄 Rechargement profil...");
+    fetchProfile();
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -199,7 +184,7 @@ const Profil = () => {
 
   const handleOpenModifier = () => {
     if (!profildata.id) {
-      alert("Aucun profil trouvé à modifier. Veuillez d'abord créer un profil.");
+      alert("Aucun profil trouvé à modifier.");
       return;
     }
     setVisibleModifier(true);
@@ -207,7 +192,7 @@ const Profil = () => {
 
   const handleOpenAjouter = () => {
     if (hasProfile) {
-      alert("Vous avez déjà un profil. Utilisez 'Mettre à jour' pour le modifier.");
+      alert("Vous avez déjà un profil. Utilisez 'Mettre à jour'.");
       return;
     }
     setVisibleAjouter(true);
@@ -230,7 +215,7 @@ const Profil = () => {
       <div className="profil-container">
         <h1>Mon Profil</h1>
 
-        {/* SECTION DEBUG - À GARDER TEMPORAIREMENT */}
+        {/* SECTION DEBUG (optionnelle - peut être supprimée)
         <div className="debug-section">
           <h4>🔍 Informations de Debug</h4>
           <div className="debug-grid">
@@ -240,25 +225,17 @@ const Profil = () => {
             <div className="debug-item">
               <strong>ID Profil:</strong> {profildata.id || "Aucun"}
             </div>
-            <div className="debug-item">
-              <strong>Nom:</strong> {profildata.Nom || "Aucun"}
-            </div>
-            <div className="debug-item">
-              <strong>Données complètes:</strong> 
-              <pre>{JSON.stringify(profildata, null, 2)}</pre>
-            </div>
           </div>
-        </div>
+        </div> */}
 
         {/* IMAGE DE PROFIL */}
         <div className="profile-image-section">
-          <div className="image-container" onClick={handleAvatarClick} style={{ cursor: "pointer" }}>
+          <div className="image-container" onClick={handleAvatarClick}>
             <Avatar
               src={userData.profileImage}
-              name={userData.username || `${profildata.Prenom} ${profildata.Nom}` || "Utilisateur"}
+              name={userData.username || "Utilisateur"}
               size="150"
               round={true}
-              className="profile-image"
             />
           </div>
           <input 
@@ -268,77 +245,25 @@ const Profil = () => {
             ref={fileInputRef}
             style={{ display: "none" }}
           />
-          <p style={{ marginTop: "10px", color: "#666" }}>Cliquez sur l'avatar pour changer la photo</p>
+          <p>Cliquez sur l'avatar pour changer la photo</p>
         </div>
 
         {/* INFOS UTILISATEUR */}
         <div className="user-info-section">
           <h3>Informations personnelles</h3>
-          <p><strong>Pseudonyme :</strong> {displayValue(userData.username)}</p>
-          <p><strong>Email :</strong> {displayValue(userData.email)}</p>
+          <p><strong>Pseudonyme :</strong> {userData.username || "—"}</p>
+          <p><strong>Email :</strong> {userData.email || "—"}</p>
         </div>
 
-        {/* PROFIL DENTISTE */}
-        <div className="profil-dentiste-section">
-          <div className="section-header">
-            <h3>Profil professionnel</h3>
-            {!hasProfile && (
-              <div className="alert alert-info">
-                <p>Vous n'avez pas encore de profil professionnel. Cliquez sur "Ajouter infos" pour créer votre profil.</p>
-              </div>
-            )}
-          </div>
-          
-          {hasProfile ? (
-            <div className="info-grid">
-              <div className="info-item">
-                <strong>Nom :</strong> {displayValue(profildata.Nom)}
-              </div>
-              <div className="info-item">
-                <strong>Prénom :</strong> {displayValue(profildata.Prenom)}
-              </div>
-              <div className="info-item">
-                <strong>Date de naissance :</strong> {displayValue(profildata.Date)}
-              </div>
-              <div className="info-item">
-                <strong>Lieu de naissance :</strong> {displayValue(profildata.Lieu)}
-              </div>
-              <div className="info-item">
-                <strong>Genre :</strong> {displayValue(profildata.genre)}
-              </div>
-              <div className="info-item">
-                <strong>Adresse :</strong> {displayValue(profildata.Adresse)}
-              </div>
-              <div className="info-item">
-                <strong>Contact :</strong> {displayValue(profildata.Contact)}
-              </div>
-              <div className="info-item">
-                <strong>Autre contact :</strong> {displayValue(profildata.AutreContact)}
-              </div>
-              <div className="info-item">
-                <strong>Numéro d'ordre :</strong> {displayValue(profildata.NumOrdre)}
-              </div>
-              <div className="info-item">
-                <strong>Titre :</strong> {displayValue(profildata.Titre)}
-              </div>
-              <div className="info-item">
-                <strong>Domaine :</strong> {displayValue(profildata.Domaine)}
-              </div>
-              <div className="info-item">
-                <strong>Région :</strong> {displayValue(profildata.Region)}
-              </div>
-            </div>
-          ) : (
-            <div className="no-profile">
-              <p>Aucune information professionnelle disponible.</p>
-            </div>
-          )}
-        </div>
+        {/* COMPOSANT D'AFFICHAGE SÉPARÉ */}
+        <AfficherProfil 
+          profildata={profildata}
+          hasProfile={hasProfile}
+        />
 
         {/* BOUTONS */}
         <div className="button-actions">
           <button
-            type="button"
             onClick={handleOpenModifier}
             disabled={!hasProfile}
             className={`btn-update ${!hasProfile ? 'btn-disabled' : ''}`}
@@ -346,7 +271,6 @@ const Profil = () => {
             Mettre à jour
           </button>
           <button
-            type="button"
             onClick={handleOpenAjouter}
             disabled={hasProfile}
             className={`btn-add ${hasProfile ? 'btn-disabled' : ''}`}
@@ -356,39 +280,38 @@ const Profil = () => {
         </div>
       </div>
 
-      {/* DIALOG AJOUT */}
+      {/* MODALS */}
       <Dialog 
-        header="Créer votre profil professionnel"
+        header="Créer votre profil"
         visible={visibleAjouter} 
         onHide={() => setVisibleAjouter(false)} 
         style={{ width: "70vw" }}
-        className="custom-dialog"
       >
-        <Ajouter onClose={() => setVisibleAjouter(false)} />
+        <Ajouter 
+          onClose={() => setVisibleAjouter(false)} 
+          onSuccess={handleProfileUpdate}
+        />
       </Dialog>
 
-      {/* DIALOG MODIFICATION */}
       <Dialog 
-        header="Modifier votre profil professionnel"
+        header="Modifier votre profil"
         visible={visibleModifier} 
         onHide={() => setVisibleModifier(false)} 
         style={{ width: "70vw" }}
-        className="custom-dialog"
       >
         <Modifier 
           onClose={() => setVisibleModifier(false)}
           profilId={profildata.id}
-          currentData={profildata}
+          currentData={profildata} 
+          onUpdate={handleProfileUpdate}
         />
       </Dialog>
 
-      {/* DIALOG IMAGE */}
       <Dialog
         header="Aperçu de l'image"
         visible={imageDialog}
         onHide={() => setImageDialog(false)}
         style={{ width: "60vw" }}
-        className="custom-dialog"
       >
         <div style={{ textAlign: "center" }}>
           {preview && (
@@ -396,30 +319,19 @@ const Profil = () => {
               <h4>Nouvelle image de profil</h4>
               <Avatar
                 src={preview}
-                name={userData.username || `${profildata.Prenom} ${profildata.Nom}` || "Utilisateur"}
+                name={userData.username}
                 size="200"
                 round={true}
-                style={{
-                  margin: "20px auto",
-                  display: "block"
-                }}
               />
               <p>Cette image remplacera votre photo de profil actuelle</p>
             </>
           )}
           <div className="dialog-actions">
-            <button
-              onClick={() => setImageDialog(false)}
-              className="btn-cancel"
-            >
+            <button onClick={() => setImageDialog(false)} className="btn-cancel">
               Annuler
             </button>
-            <button
-              onClick={saveCroppedImage}
-              disabled={loading}
-              className="btn-confirm"
-            >
-              {loading ? "Enregistrement..." : "Confirmer l'image"}
+            <button onClick={saveCroppedImage} disabled={loading} className="btn-confirm">
+              {loading ? "Enregistrement..." : "Confirmer"}
             </button>
           </div>
         </div>

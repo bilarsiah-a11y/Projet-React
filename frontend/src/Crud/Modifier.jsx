@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../Crud/Modifier.css";
 import Axios from "axios";
 
-const Modifier = ({ onClose, profilId, currentData }) => {
+const Modifier = ({ onClose, profilId, currentData, onUpdate }) =>{
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -18,9 +18,12 @@ const Modifier = ({ onClose, profilId, currentData }) => {
     region: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false); // ✅ Nouvel état pour gérer le succès
+
   useEffect(() => {
     if (currentData) {
-  
+      console.log("📥 Données reçues pour modification:", currentData);
       setFormData({
         nom: currentData.Nom || "",
         prenom: currentData.Prenom || "",
@@ -35,33 +38,19 @@ const Modifier = ({ onClose, profilId, currentData }) => {
         domaine: currentData.Domaine || "",
         region: currentData.Region || "",
       });
+    } 
+    else if (profilId) {
+      fetchProfilData();
     }
-  }, [currentData]);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  }, [profilId, currentData]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const requiredFields = [
-      "nom", "prenom", "date", "lieu", "genre", "adresse",
-      "numordre", "contact", "titre", "domaine", "region",
-    ];
-
-    const emptyField = requiredFields.find((field) => !formData[field]);
-    if (emptyField) {
-      alert("Veuillez remplir tous les champs obligatoires");
-      return;
-    }
-
+  // Fonction pour charger les données si currentData n'est pas fourni
+  const fetchProfilData = async () => {
     try {
-      // CORRECTION : Utiliser PUT au lieu de POST et inclure l'ID dans l'URL
+      setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await Axios.put(
-        `http://localhost:3002/Modifier/${profilId}`,
-        formData,
+      const response = await Axios.get(
+        `http://localhost:3002/profil/${profilId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -69,14 +58,115 @@ const Modifier = ({ onClose, profilId, currentData }) => {
         }
       );
       
-      console.log("Réponse backend :", response.data);
-      alert("Modification réussie !");
-      setTimeout(() => onClose(), 1500);
+      console.log("📥 Données chargées depuis API:", response.data);
+      setFormData({
+        nom: response.data.Nom || "",
+        prenom: response.data.Prenom || "",
+        date: response.data.Date || "",
+        lieu: response.data.Lieu || "",
+        genre: response.data.genre || "",
+        adresse: response.data.Adresse || "",
+        numordre: response.data.NumOrdre || "",
+        contact: response.data.Contact || "",
+        autreContact: response.data.AutreContact || "",
+        titre: response.data.Titre || "",
+        domaine: response.data.Domaine || "",
+        region: response.data.Region || "",
+      });
     } catch (err) {
-      console.error("Erreur complète :", err.response?.data || err.message);
-      alert(err.response?.data?.message || "Erreur lors de la modification");
+      console.error("❌ Erreur chargement données:", err);
+      alert("Erreur lors du chargement des données");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value 
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    alert("Token d'authentification manquant. Veuillez vous reconnecter.");
+    setLoading(false);
+    return;
+  }
+
+  const requiredFields = [
+    "nom", "prenom", "date", "lieu", "genre", "adresse",
+    "numordre", "contact", "titre", "domaine", "region",
+  ];
+
+  const emptyField = requiredFields.find((field) => !formData[field]);
+  if (emptyField) {
+    alert("Veuillez remplir tous les champs obligatoires");
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const response = await Axios.put(
+      `http://localhost:3002/Modifier/${profilId}`,
+      formData,
+      { 
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        } 
+      }
+    );
+    
+    console.log("✅ Réponse backend :", response.data);
+    alert("Modification réussie !");
+
+    // ✅ CORRECTION : Fermer immédiatement après l'alerte
+    if (onUpdate) {
+      onUpdate();
+    }
+    
+    onClose(); // ✅ Fermeture immédiate
+    
+  } catch (err) {
+    console.error("❌ Erreur complète :", err);
+    console.error("❌ Réponse erreur :", err.response?.data);
+    alert(err.response?.data?.message || "Erreur lors de la modification");
+  } finally {
+    setLoading(false);
+  }
+};;
+
+  // ✅ Afficher un message de succès pendant la fermeture
+  if (success) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="success-message">
+            <h3>✅ Modification réussie !</h3>
+            <p>Fermeture automatique...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading && !currentData) {
+    return (
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <p>Chargement des données...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="modal-overlay">
@@ -122,7 +212,7 @@ const Modifier = ({ onClose, profilId, currentData }) => {
             <option value="Docteur Spécialiste">Docteur Spécialiste</option>
           </select>
 
-          <label>Domaine :</label>
+          <label>Fonction :</label>
           <select name="domaine" value={formData.domaine} onChange={handleChange} required>
             <option value="">-- Sélectionnez votre domaine --</option>
             <option value="Fonctionnaire">Fonctionnaire</option>
@@ -130,7 +220,6 @@ const Modifier = ({ onClose, profilId, currentData }) => {
             <option value="Libéral">Libéral</option>
           </select>
 
-          {/* CORRECTION : Changer le name de "domaine" à "region" */}
           <label>Région :</label>
           <select name="region" value={formData.region} onChange={handleChange} required>
             <option value="">-- Sélectionnez votre région --</option>
@@ -158,8 +247,12 @@ const Modifier = ({ onClose, profilId, currentData }) => {
           </select>
 
           <div className="button-container">
-            <button type="submit" className="btn-submit">Modifier</button>
-            <button type="button" onClick={onClose} className="btn-cancel">Annuler</button>
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? "Modification..." : "Modifier"}
+            </button>
+            <button type="button" onClick={onClose} className="btn-cancel" disabled={loading}>
+              Annuler
+            </button>
           </div>
         </form>
       </div>
