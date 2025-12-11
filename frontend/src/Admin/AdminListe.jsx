@@ -42,47 +42,63 @@ const StyledAlert = ({ message, type = "info", onClose }) => {
     top: "20px",
     right: "20px",
     padding: "16px 20px",
-    borderRadius: "8px",
+    borderRadius: "10px",
     color: "white",
     fontWeight: "500",
     zIndex: 1000,
     minWidth: "300px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    animation: "slideIn 0.3s ease-out"
+    animation: "slideIn 0.3s ease-out",
+    backdropFilter: "blur(10px)",
+    border: "1px solid rgba(255,255,255,0.2)"
   };
 
   const typeStyles = {
     success: {
-      background: "linear-gradient(135deg, #87CEEB, #4682B4)",
-      borderLeft: "4px solid #368BC9"
+      background: "linear-gradient(135deg, rgba(135, 206, 235, 0.95), rgba(70, 130, 180, 0.95))",
+      borderLeft: "5px solid #2E8BC0"
     },
     error: {
-      background: "linear-gradient(135deg, #FF6B6B, #EE5A52)",
-      borderLeft: "4px solid #DC3545"
+      background: "linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(238, 90, 82, 0.95))",
+      borderLeft: "5px solid #D32F2F"
     },
     info: {
-      background: "linear-gradient(135deg, #87CEEB, #5D8AA8)",
-      borderLeft: "4px solid #4A90E2"
+      background: "linear-gradient(135deg, rgba(135, 206, 235, 0.95), rgba(93, 138, 168, 0.95))",
+      borderLeft: "5px solid #1976D2"
     }
   };
 
   return (
     <div style={{ ...alertStyles, ...typeStyles[type] }}>
-      <span>{message}</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        {type === "success" && <span style={{ fontSize: "20px" }}>✓</span>}
+        {type === "error" && <span style={{ fontSize: "20px" }}>✗</span>}
+        {type === "info" && <span style={{ fontSize: "20px" }}>ℹ</span>}
+        <span>{message}</span>
+      </div>
       <button 
         onClick={onClose}
         style={{
-          background: "none",
+          background: "rgba(255,255,255,0.2)",
           border: "none",
           color: "white",
-          fontSize: "18px",
+          fontSize: "20px",
           cursor: "pointer",
           marginLeft: "10px",
-          fontWeight: "bold"
+          fontWeight: "bold",
+          width: "30px",
+          height: "30px",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          transition: "background 0.3s"
         }}
+        onMouseOver={(e) => e.target.style.background = "rgba(255,255,255,0.3)"}
+        onMouseOut={(e) => e.target.style.background = "rgba(255,255,255,0.2)"}
       >
         ×
       </button>
@@ -98,54 +114,94 @@ const StyledConfirm = ({ message, onConfirm, onCancel }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.6)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 1001
+    zIndex: 1001,
+    backdropFilter: "blur(3px)"
   };
 
   const contentStyles = {
     background: "white",
-    padding: "25px",
-    borderRadius: "12px",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.2)",
-    maxWidth: "400px",
+    padding: "30px",
+    borderRadius: "15px",
+    boxShadow: "0 15px 35px rgba(0,0,0,0.3)",
+    maxWidth: "450px",
     width: "90%",
-    textAlign: "center"
+    textAlign: "center",
+    border: "1px solid #E3F2FD"
   };
 
   const buttonContainerStyles = {
     display: "flex",
-    gap: "12px",
+    gap: "15px",
     justifyContent: "center",
-    marginTop: "20px"
+    marginTop: "25px"
   };
 
   const buttonStyles = {
-    padding: "10px 20px",
+    padding: "12px 25px",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     cursor: "pointer",
-    fontWeight: "500",
-    transition: "all 0.2s ease"
+    fontWeight: "600",
+    transition: "all 0.3s ease",
+    minWidth: "120px",
+    fontSize: "14px",
+    letterSpacing: "0.5px"
   };
 
   return (
     <div style={modalStyles}>
       <div style={contentStyles}>
-        <h3 style={{ margin: "0 0 15px 0", color: "#2C3E50" }}>Confirmation</h3>
-        <p style={{ color: "#5D6D7E", lineHeight: "1.5" }}>{message}</p>
+        <div style={{
+          width: "60px",
+          height: "60px",
+          background: "linear-gradient(135deg, #FF6B6B, #EE5A52)",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 20px",
+          color: "white",
+          fontSize: "28px"
+        }}>
+          ⚠
+        </div>
+        <h3 style={{ 
+          margin: "0 0 15px 0", 
+          color: "#2C3E50",
+          fontSize: "22px"
+        }}>
+          Confirmation requise
+        </h3>
+        <p style={{ 
+          color: "#5D6D7E", 
+          lineHeight: "1.6",
+          fontSize: "15px",
+          marginBottom: "5px"
+        }}>
+          {message}
+        </p>
+        <p style={{
+          color: "#E74C3C",
+          fontSize: "13px",
+          fontWeight: "500",
+          marginTop: "0"
+        }}>
+          Cette action est irréversible !
+        </p>
         <div style={buttonContainerStyles}>
           <button
             onClick={onCancel}
             style={{
               ...buttonStyles,
-              background: "#E74C3C",
-              color: "white"
+              background: "linear-gradient(135deg, #E0E0E0, #BDBDBD)",
+              color: "#2C3E50"
             }}
-            onMouseOver={(e) => e.target.style.background = "#C0392B"}
-            onMouseOut={(e) => e.target.style.background = "#E74C3C"}
+            onMouseOver={(e) => e.target.style.background = "linear-gradient(135deg, #D6D6D6, #B0B0B0)"}
+            onMouseOut={(e) => e.target.style.background = "linear-gradient(135deg, #E0E0E0, #BDBDBD)"}
           >
             Annuler
           </button>
@@ -153,11 +209,12 @@ const StyledConfirm = ({ message, onConfirm, onCancel }) => {
             onClick={onConfirm}
             style={{
               ...buttonStyles,
-              background: "linear-gradient(135deg, #87CEEB, #4682B4)",
-              color: "white"
+              background: "linear-gradient(135deg, #FF6B6B, #EE5A52)",
+              color: "white",
+              boxShadow: "0 4px 15px rgba(255, 107, 107, 0.3)"
             }}
-            onMouseOver={(e) => e.target.style.background = "#368BC9"}
-            onMouseOut={(e) => e.target.style.background = "linear-gradient(135deg, #87CEEB, #4682B4)"}
+            onMouseOver={(e) => e.target.style.background = "linear-gradient(135deg, #FF5252, #D32F2F)"}
+            onMouseOut={(e) => e.target.style.background = "linear-gradient(135deg, #FF6B6B, #EE5A52)"}
           >
             Confirmer
           </button>
@@ -174,10 +231,11 @@ const AdminListe = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [alert, setAlert] = useState(null);
   const [confirm, setConfirm] = useState(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     fetchDentistes();
-  }, [region]);
+  }, [region, refreshTrigger]);
 
   const showAlert = (message, type = "info") => {
     setAlert({ message, type });
@@ -236,7 +294,7 @@ const AdminListe = () => {
     }
 
     const confirmed = await showConfirm(
-      `Vous voullez supprimer définitivement ${nomComplet} ?\n\nCette action est irréversible !`
+      `Voulez-vous vraiment supprimer définitivement le dentiste :\n"${nomComplet}" ?`
     );
 
     if (!confirmed) return;
@@ -249,7 +307,7 @@ const AdminListe = () => {
       );
 
       if (response.status === 200) {
-        showAlert(`${nomComplet} supprimé avec succès !`, "success");
+        showAlert(`Dentiste "${nomComplet}" supprimé avec succès !`, "success");
         setDentistes(prev => prev.filter(d => d.id !== profilId));
       }
     } catch (err) {
@@ -259,6 +317,11 @@ const AdminListe = () => {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handleRefresh = () => {
+    setRefreshTrigger(prev => prev + 1);
+    showAlert("Liste des dentistes actualisée", "info");
   };
 
   return (
@@ -281,73 +344,166 @@ const AdminListe = () => {
         />
       )}
 
-      <div className="admin-header">
-        <h1>GESTION DES DENTISTES</h1>
-        <p>SourireGuide - Administration 2025</p>
-      </div>
+        <div className="content">
+          <h1>Gestion des dentistes</h1>
+        </div>
+      
 
       <div className="admin-controls">
-        <div className="filter-section">
-          <label>Région :</label>
-          <select value={region} onChange={(e) => setRegion(e.target.value)}>
-            {regionsList.map(r => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
+        <div className="controls-left">
+          <div className="filter-section">
+            <label htmlFor="region-select">
+              <i className="filter-icon">📍</i>
+              Sélectionnez une région :
+            </label>
+            <div className="select-wrapper">
+              <select 
+                id="region-select"
+                value={region} 
+                onChange={(e) => setRegion(e.target.value)}
+              >
+                {regionsList.map(r => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+              <div className="select-arrow">▼</div>
+            </div>
+          </div>
+          
+          <div className="region-indicator">
+            <span className="region-label">Région active :</span>
+            <span className="region-value">{region}</span>
+          </div>
         </div>
-        <div className="stats">
-          <strong>{dentistes.length}</strong> dentiste(s)
+
+        <div className="controls-right">
+      
+          
+          <div className="stats">
+            <div className="stats-content">
+              <span className="stats-label">Total dentistes</span>
+              <span className="stats-value">{dentistes.length}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="dentistes-table-container">
         {loading ? (
-          <p>Chargement en cours...</p>
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Chargement des dentistes de la région <strong>{region}</strong>...</p>
+            <p className="loading-sub">Veuillez patienter</p>
+          </div>
         ) : dentistes.length === 0 ? (
-          <p>Aucun dentiste trouvé dans cette région.</p>
+          <div className="no-result">
+            <div className="no-result-icon">🦷</div>
+            <h3>Aucun dentiste trouvé</h3>
+            <p>La région <strong>{region}</strong> ne contient aucun dentiste pour le moment.</p>
+            <p className="hint">Essayez une autre région ou revenez plus tard</p>
+          </div>
         ) : (
           <table className="dentistes-table">
             <thead>
               <tr>
-                <th>Photo</th>
+                <th className="photo-header">Photo</th>
                 <th>Dentiste</th>
                 <th>Contact</th>
                 <th>N° Ordre</th>
-                <th>Action</th>
+                <th className="action-header">Action</th>
               </tr>
             </thead>
             <tbody>
               {dentistes.map((dentiste) => {
                 const nomComplet = `${dentiste.Titre || "Dr"} ${dentiste.Prenom} ${dentiste.Nom}`.trim();
-
+                const domain = dentiste.Domaine || "Généraliste";
+                
                 return (
-                  <tr key={dentiste.id}>
+                  <tr key={dentiste.id} className="dentiste-row">
                     <td>
-                      <img
-                        src={getImageUrl(dentiste.profileImage)}
-                        alt="profil"
-                        className="admin-photo"
-                        onError={(e) => e.target.src = "/default-avatar.png"}
-                      />
+                      <div className="photo-container">
+                        <img
+                          src={getImageUrl(dentiste.profileImage)}
+                          alt={`Profil de ${nomComplet}`}
+                          className="admin-photo"
+                          onError={(e) => {
+                            e.target.src = "/default-avatar.png";
+                            e.target.onerror = null;
+                          }}
+                        />
+                
+                      </div>
                     </td>
                     <td>
-                      <strong>{nomComplet}</strong><br />
-                      <small>{dentiste.Adresse} • {dentiste.Domaine || "Généraliste"}</small>
-                      {dentiste.Lieu && <div> {dentiste.Lieu}</div>}
+                      <div className="dentiste-info">
+                        <strong className="dentiste-name">{nomComplet}</strong>
+                        <div className="dentiste-details">
+                          {dentiste.NumOrdre}
+                          <span className="domaine-badge">{domain}</span>
+                          <span className="dentiste-address">
+                            <i className="address-icon">📍</i>
+                            {dentiste.Adresse || "Adresse non renseignée"}
+                          </span>
+                          {dentiste.Lieu && (
+                            <span className="dentiste-lieu">
+                              <i className="lieu-icon">🏢</i>
+                              {dentiste.Lieu}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </td>
                     <td>
-                      {dentiste.Contact}<br />
-                      {dentiste.AutreContact && <small>{dentiste.AutreContact}</small>}
+                      <div className="contact-info">
+                        <div className="contact-main">
+                          <i className="phone-icon">📱</i>
+                          <span className="contact-number">{dentiste.Contact || "Non renseigné"}</span>
+                        </div>
+                        {dentiste.AutreContact && (
+                          <div className="contact-secondary">
+                            <i className="phone-icon">📞</i>
+                            <span>{dentiste.AutreContact}</span>
+                          </div>
+                        )}
+                        {dentiste.Email && (
+                          <div className="contact-email">
+                            <i className="email-icon">✉</i>
+                            <span>{dentiste.Email}</span>
+                          </div>
+                        )}
+                      </div>
                     </td>
-                    <td>{dentiste.NumOrdre || "—"}</td>
                     <td>
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(dentiste.id, dentiste.users_id, nomComplet)}
-                        disabled={deletingId === dentiste.id}
-                      >
-                        {deletingId === dentiste.id ? "Suppression..." : "Supprimer"}
-                      </button>
+                      <div className="num-ordre-container">
+                        <span className="num-ordre">
+                          {dentiste.NumOrdre || "—"}
+                        </span>
+                        {dentiste.NumOrdre && (
+                          <span className="ordre-badge">Validé</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          className="btn-delete"
+                          onClick={() => handleDelete(dentiste.id, dentiste.users_id, nomComplet)}
+                          disabled={deletingId === dentiste.id}
+                        >
+                          {deletingId === dentiste.id ? (
+                            <>
+                              <span className="deleting-spinner"></span>
+                              Suppression...
+                            </>
+                          ) : (
+                            <>
+                              <i className="delete-icon">🗑</i>
+                              Supprimer
+                            </>
+                          )}
+                        </button>
+                
+                      </div>
                     </td>
                   </tr>
                 );
@@ -356,20 +512,6 @@ const AdminListe = () => {
           </table>
         )}
       </div>
-
-      {/* Ajoutez cette CSS dans votre AdminListe.css */}
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 };

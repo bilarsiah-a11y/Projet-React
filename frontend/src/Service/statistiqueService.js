@@ -28,7 +28,7 @@ export const CardsData = [
     title: "Exemple",
     color: { backGround: "linear-gradient(180deg,#bb67ff 0%,#4484f3 100%)", boxShadow: "0px 10px 20px 0px #e0c6f5" },
     barValue: 75,
-    Value: "75%",
+    Value: "100%",
     png: "FaUsers",
     series: [{ name: "Ex", data: [10, 20, 30] }],
   },

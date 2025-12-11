@@ -40,34 +40,35 @@ const ProfileDropdown = () => {
   }, []);
 
   const handleLogout = () => {
-    if (window.confirm("Se déconnecter ?")) {
+    if (window.confirm("voulez vous vraiment deconnecter ?")) {
       localStorage.clear();
       navigate("/apropos");
     }
   };
 
   return (
-    <div className="profile-dropdown-wrapper" ref={menuRef}>
+    <div className="Adminprofile-dropdown-wrapper" ref={menuRef}>
       <button
-        className="profile-toggle-btn"
+        className="Adminprofile-toggle-btn"
         onClick={() => setShowMenu(!showMenu)}
+         data-tooltip={dentistName} 
       >
-        <IoPerson className="profile-icon" />
+        <IoPerson className="Adminprofile-icon" />
         <span className="admin-name">{dentistName}</span>
         <span className="dropdown-arrow">▼</span>
        
       </button>
 
       {showMenu && (
-        <div className="profile-menu">
+        <div className="Adminprofile-menu">
           <Link
             to="/profil"
-            className="menu-item"
+            className="Adminmenu-item"
             onClick={() => setShowMenu(false)}
           >
             <IoPerson /> Mon profil
           </Link>
-          <button className="menu-item logout-item" onClick={handleLogout}>
+          <button className="Adminmenu-item logout-item" onClick={handleLogout}>
             <IoLogOut /> Se déconnecter
           </button>
         </div>

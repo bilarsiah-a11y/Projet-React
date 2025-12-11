@@ -237,4 +237,147 @@ router.post('/Profil', verifyToken, async (req, res) => {
   }
 });
 
+// stats
+router.get('/dashboard/stats', async (req, res) => {
+  console.log('📊 Appel /dashboard/stats');
+  try {
+    // Total dentistes
+    const [totalResult] = await db.execute('SELECT COUNT(*) as total FROM users WHERE role = "dentiste"');
+    const totalDentistes = parseInt(totalResult[0]?.total) || 0;
+    console.log('Total dentistes:', totalDentistes);
+
+    // Dentistes approuvés
+    const [approvedResult] = await db.execute(
+      'SELECT COUNT(*) as total FROM users WHERE status = "approved" AND role = "dentiste"'
+    );
+    const dentistesApprouves = parseInt(approvedResult[0]?.total) || 0;
+    console.log('Dentistes approuvés:', dentistesApprouves);
+
+    // Nouveaux ce mois (depuis le 1er du mois)
+    const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+      .toISOString().split('T')[0];
+    
+    const [newResult] = await db.execute(
+      'SELECT COUNT(*) as total FROM users WHERE DATE(created_at) >= ? AND role = "dentiste"',
+      [firstDayOfMonth]
+    );
+    const nouveauxCeMois = parseInt(newResult[0]?.total) || 0;
+    console.log('Nouveaux ce mois:', nouveauxCeMois);
+
+    // Régions couvertes
+    const [regionsResult] = await db.execute(
+      'SELECT COUNT(DISTINCT Region) as total FROM profil WHERE Region IS NOT NULL'
+    );
+    const regionsCouvertes = parseInt(regionsResult[0]?.total) || 0;
+    console.log('Régions couvertes:', regionsCouvertes);
+
+    // Dentistes en attente
+    const [pendingResult] = await db.execute(
+      'SELECT COUNT(*) as total FROM users WHERE status = "pending" AND role = "dentiste"'
+    );
+    const dentistesEnAttente = parseInt(pendingResult[0]?.total) || 0;
+    console.log('En attente:', dentistesEnAttente);
+
+    // Retourner les données SANS le wrapper "data"
+    res.json({
+      totalDentistes,
+      dentistesApprouves,
+      nouveauxCeMois,
+      regionsCouvertes,
+      dentistesEnAttente
+    });
+    
+  } catch (error) {
+    console.error('❌ Erreur /dashboard/stats:', error);
+    // Retourner des données par défaut en cas d'erreur
+    res.json({
+      totalDentistes: 0,
+      dentistesApprouves: 0,
+      nouveauxCeMois: 0,
+      regionsCouvertes: 0,
+      dentistesEnAttente: 0
+    });
+  }
+});
+
+// GET /api/dentistes/recent - VERSION SIMPLIFIÉE
+router.get('/dentistes/recent', async (req, res) => {
+  console.log('📋 Appel /dentistes/recent');
+  try {
+    const limit = parseInt(req.query.limit) || 5;
+    
+    const [dentistes] = await db.execute(`
+      SELECT p.*, u.email, u.created_at 
+      FROM profil p 
+      JOIN users u ON p.users_id = u.id 
+      WHERE u.status = 'approved' 
+      ORDER BY u.created_at DESC 
+      LIMIT ${limit}
+    `);
+    
+    console.log(`${dentistes.length} dentistes récents trouvés`);
+    
+    // Retourner DIRECTEMENT le tableau
+    res.json(dentistes || []);
+    
+  } catch (error) {
+    console.error('❌ Erreur /dentistes/recent:', error);
+    // Retourner tableau vide
+    res.json([]);
+  }
+});
+
+// GET /api/stats/regions - VERSION SIMPLIFIÉE
+router.get('/stats/regions', async (req, res) => {
+  console.log('📍 Appel /stats/regions');
+  try {
+    const [regions] = await db.execute(`
+      SELECT Region as name, COUNT(*) as count 
+      FROM profil 
+      WHERE Region IS NOT NULL 
+      GROUP BY Region 
+      ORDER BY count DESC
+    `);
+    
+    console.log(`${regions.length} régions avec données`);
+    
+    // S'assurer que chaque région a les bonnes propriétés
+    const formattedRegions = (regions || []).map(region => ({
+      name: region.name || 'Inconnu',
+      count: parseInt(region.count) || 0
+    }));
+    
+    // Retourner DIRECTEMENT le tableau
+    res.json(formattedRegions);
+    
+  } catch (error) {
+    console.error('❌ Erreur /stats/regions:', error);
+    // Retourner tableau vide en cas d'erreur
+    res.json([]);
+  }
+});
+
+// Route TEST pour vérifier la connexion
+router.get('/test-dashboard', async (req, res) => {
+  console.log('🧪 Test dashboard');
+  try {
+    const [users] = await db.execute('SELECT COUNT(*) as count FROM users');
+    const [profils] = await db.execute('SELECT COUNT(*) as count FROM profil');
+    
+    res.json({
+      success: true,
+      message: 'Dashboard API fonctionne',
+      users: users[0]?.count || 0,
+      profils: profils[0]?.count || 0,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Test échoué:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
 module.exports = router;

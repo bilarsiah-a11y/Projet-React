@@ -1,110 +1,650 @@
-.annuaire-simple {
-  background: #fff;
+/* ListeDentistes.css - Version Visiteur */
+
+.annuaire-visiteur {
   min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-  padding: 20px 15px;
+  background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 70%);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding-top: 20px;
 }
 
-/* TITRE SIMPLE ET PROPRE */
-.header-simple {
+/* Hero Section */
+.hero-section-visiteur {
+  
+  color: rgb(2, 37, 37);
+  padding: 3rem 1.5rem;
   text-align: center;
-  margin-bottom: 20px;
-  padding: 20px 0;
-  /* background: #00bcd4; */
-  color: white;
 }
 
-.header-simple h1 {
-  font-size: 2.2rem;
-  font-weight: 800;
+.hero-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 1rem;
+  opacity: 0.95;
   margin: 0;
-  letter-spacing: 1px;
 }
 
-.header-simple p {
-  font-size: 1.1rem;
-  margin: 8px 0 0;
-  opacity: 0.9;
+/* Barre de filtres */
+.filtres-visiteur {
+  max-width: 1200px;
+  margin: 0 auto 1rem;
+  padding: 0 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-/* FILTRE DISCRET */
-.filter-simple {
-  text-align: center;
-  margin: 20px 0;
+.search-container-visiteur {
+  flex: 1;
+  min-width: 400px;
+  position: relative;
 }
 
-.filter-simple select {
-  padding: 12px 20px;
-  font-size: 1.1rem;
-  border: 2px solid #00bcd4;
-  border-radius: 30px;
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #29b6f6;
+  margin-left: 270px;
+}
+
+.search-input-visiteur {
+  width: 60%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid #b3e5fc;
+  border-radius: 12px;
+  font-size: 1rem;
   background: white;
-  color: #333;
-  min-width: 260px;
-  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-left: 270px;
 }
 
-/* LISTE ULTRA COMPACTE */
-.liste-simple {
-  max-width: 800px;
-  margin: 0 auto;
-  display: grid;
-  gap: 14px;
+.search-input-visiteur:focus {
+  outline: none;
+  border-color: #29b6f6;
+  box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.1);
 }
 
-.dentiste-ligne {
+.region-filter-visiteur {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: #f9f9f9;
-  padding: 12px;
+  gap: 0.75rem;
+  background: white;
+  padding: 0.7rem ;
   border-radius: 12px;
-  border-left: 5px solid #00bcd4;
+  border: 2px solid #b3e5fc;
+  min-width: 90px;
 }
 
-.photo-petite {
+.region-select-visiteur {
+  border: none;
+  font-size: 1rem;
+  color: #044453;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  flex: 1;
+  margin-right: 260px;
+}
+
+/* Statistiques */
+.stats-visiteur {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  border: 1px solid #e0f7fa;
+  min-width: 150px;
+}
+
+
+
+.stat-icon {
+  font-size: 2rem;
+  color: #29b6f6;
+}
+
+.stat-content h3 {
+  margin: 0;
+  font-size: 2rem;
+  color: #333;
+}
+
+.stat-content p {
+  margin: 0.25rem 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e0f7fa;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  color: #b3e5fc;
+}
+
+.empty-state h3 {
+  color: #333;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+}
+
+.empty-state p {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Grille des dentistes */
+.dentistes-grid-visiteur {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dentiste-card-visiteur {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border: 1px solid #e0f7fa;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.dentiste-card-visiteur:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  border-color: #29b6f6;
+}
+
+/* Header de la carte */
+.card-header-visiteur {
+  background: linear-gradient(135deg, #e0f7fa 0%, #b3e5fc 100%);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dentiste-avatar-visiteur img {
   width: 70px;
   height: 70px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #00bcd4;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.infos {
+.dentiste-titles h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  line-height: 1.3;
+}
+
+.ordre-badge-visiteur {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.ordre-badge-visiteur svg {
+  color: #29b6f6;
+}
+
+/* Corps de la carte */
+.card-body-visiteur {
+  padding: 1.5rem;
   flex: 1;
-  font-size: 0.98rem;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.info-item svg {
+  color: #29b6f6;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content strong {
+  display: block;
+  color: #333;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.info-content p, .info-content span {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
   line-height: 1.4;
 }
 
-.infos strong {
-  font-size: 1.15rem;
-  color: #00bcd4;
+.city, .region {
   display: block;
-  margin-bottom: 4px;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
 }
 
-.infos span {
-  display: block;
-  color: #444;
+.region {
+  color: #29b6f6;
+  font-weight: 500;
 }
 
-/* Messages */
-.loading, .no-result {
-  text-align: center;
-  padding: 60px 20px;
+.phone-link, .email-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.phone-link:hover, .email-link:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+.secondary-contact {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
   color: #666;
-  font-size: 1.1rem;
 }
 
-/* Mobile parfait */
-@media (max-width: 600px) {
-  .header-simple h1 { font-size: 1.9rem; }
-  .dentiste-ligne {
+.domaine-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-content p {
+    font-size: 1rem;
+  }
+  
+  .filtres-visiteur {
+    flex-direction: column;
+  }
+  
+  .search-container-visiteur,
+  .region-filter-visiteur {
+    width: 100%;
+  }
+  
+  .dentistes-grid-visiteur {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    min-width: 100%;
+  }
+  
+  .card-header-visiteur {
     flex-direction: column;
     text-align: center;
   }
-  .photo-petite {
+  
+  .dentiste-avatar-visiteur img {
     width: 80px;
     height: 80px;
+  }
+  
+  .card-actions-visiteur {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section-visiteur {
+    padding: 2rem 1rem;
+  }
+  
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .info-item svg {
+    align-self: flex-start;
+  }
+}
+/* Liste simplifiée */
+
+.liste-dentistes-container-simple {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.dentistes-liste-simple {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e0f7fa;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 0;
+}
+
+.results-counter {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e0f7fa;
+  text-align: center;
+  background: #f8fdff;
+  border-radius: 16px 16px 0 0;
+}
+
+.results-count {
+  font-weight: 600;
+  color: #29b6f6;
+}
+
+.region-filter-info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Item dentiste simplifié */
+.dentiste-item-simple {
+  display: flex;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dentiste-item-simple:last-child {
+  border-bottom: none;
+}
+
+
+
+/* Image à gauche - 100px */
+.dentiste-image-simple {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+}
+
+.dentiste-image-simple img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Informations à droite */
+.dentiste-info-simple {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Header */
+.dentiste-header-simple {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dentiste-nom {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.dentiste-numero {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+  background: #f5f5f5;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.dentiste-numero svg {
+  color: #29b6f6;
+}
+
+/* Adresse */
+.dentiste-adresse {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.dentiste-adresse svg {
+  color: #29b6f6;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.adresse-text {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.localisation {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.ville, .region {
+  font-size: 0.85rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+}
+
+.ville {
+  color: #666;
+  background: #f5f5f5;
+}
+
+.region {
+  color: #29b6f6;
+  background: #e0f7fa;
+  font-weight: 500;
+}
+
+/* Contacts */
+.dentiste-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.contact-item-simple {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-item-simple svg {
+  color: #29b6f6;
+  flex-shrink: 0;
+}
+
+.telephone, .email {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.contact-secondaire {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contact-secondaire .label {
+  font-weight: 500;
+}
+
+.contact-secondaire .valeur {
+  color: #333;
+}
+
+/* Domaine */
+.dentiste-domaine {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.label-domaine {
+  color: #666;
+  font-weight: 500;
+}
+
+.valeur-domaine {
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dentiste-item-simple {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .dentiste-image-simple {
+    width: 80px;
+    height: 80px;
+    align-self: center;
+  }
+  
+  .dentiste-header-simple {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .contact-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .localisation {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .actions-simple {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dentiste-nom {
+    font-size: 1.1rem;
+  }
+  
+  .dentiste-adresse {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .dentiste-contacts {
+    flex-direction: column;
+  }
+  
+  .contact-secondaire {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .dentiste-domaine {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .btn-action-simple {
+    width: 100%;
+    justify-content: center;
   }
 }

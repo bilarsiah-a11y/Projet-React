@@ -1,32 +1,33 @@
-/* card.css - Version corrigée */
-
+/* card.css - Version simplifiée */
 .card {
   height: 100%;
   position: relative;
-  z-index: 1;
 }
 
+/* Carte compacte - MODIFIÉ: fond blanc */
 .CompactCard {
-  padding: 25px 20px;
-  border-radius: 20px;
-  color: white;
   height: 160px;
-  position: relative;
+  border-radius: 16px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0f2f7;
+  padding: 25px 20px;
+  background: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .CompactCard:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 25px rgba(0, 188, 212, 0.15);
+  border-color: #00bcd4;
 }
 
+/* Header de la carte */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -35,433 +36,152 @@
 }
 
 .card-icon-container {
-  background: rgba(255, 255, 255, 0.25);
+  background: #f0f9fb;
   border-radius: 50%;
   padding: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
   width: 50px;
   height: 50px;
+  border: 2px solid #e0f7fa;
 }
 
 .card-icon {
-  font-size: 1.4rem;
-  color: white;
+  font-size: 1.5rem;
+  color: #00bcd4;
 }
 
-.circular-progress-container {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Correction pour la carte "Total Dentistes" - pas de CircularProgressbar */
-.no-progress-card .card-header {
-  justify-content: flex-start;
-}
-
-.no-progress-card .card-icon-container {
-  margin-right: auto;
-}
-
+/* Contenu de la carte */
 .card-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .card-title {
   font-size: 1.1rem;
   font-weight: 600;
-  opacity: 0.95;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+  color: #333;
+  letter-spacing: 0.3px;
 }
 
 .card-value {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  opacity: 1;
-  line-height: 1.1;
+  color: #008c9e;
 }
 
-/* Styles spécifiques pour les différentes cartes */
+/* Styles spécifiques pour cartes - MODIFIÉ: couleurs de texte seulement */
 .card[data-type="total"] .card-value {
-  font-size: 1.8rem;
-  font-weight: 800;
+  color: #008c9e;
 }
 
 .card[data-type="pending"] .card-value {
-  color: #FF6B6B;
+  color: #ff9800;
 }
 
 .card[data-type="verified"] .card-value {
-  color: #51CF66;
+  color: #4caf50;
 }
 
 .card[data-type="region"] .card-value {
-  font-size: 1.4rem;
+  color: #2196f3;
 }
 
-/* Amélioration du CircularProgressbar */
-.CircularProgressbar .CircularProgressbar-text {
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  fill: white !important;
-}
-
-.CircularProgressbar .CircularProgressbar-path {
-  stroke: white !important;
-  stroke-linecap: round !important;
-}
-
-.CircularProgressbar .CircularProgressbar-trail {
-  stroke: rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Expanded Card - Corrections pour ApexCharts */
+/* Carte étendue - MODIFIÉ: ApexCharts décalé à gauche */
 .ExpandedCard {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
-  max-width: 800px;
+  max-width: 900px;
   max-height: 90vh;
-  padding: 25px;
-  border-radius: 20px;
-  color: white;
+  padding: 25px 20px 25px 15px; /* ← padding-left réduit */
+  border-radius: 16px;
+  color: #333;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  background: white;
+  border: 1px solid #e0f7fa;
   overflow: hidden;
 }
 
 .expanded-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  border-bottom: 2px solid #f0f9fb;
+  padding-left: 5px; /* ← Décalé à gauche */
 }
 
 .expanded-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.chart-type-selector {
-  display: flex;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 4px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-}
-
-.chart-type-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.75rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.chart-type-btn.active {
-  background: rgba(255, 255, 255, 0.3);
-  font-weight: 600;
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.chart-type-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  color: #008c9e;
 }
 
 .close-icon {
   cursor: pointer;
   font-size: 1.5rem;
-  color: white;
+  color: #666;
   transition: all 0.3s ease;
   padding: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  min-width: 40px;
-  min-height: 40px;
+  background: #f0f9fb;
+  border: 1px solid #e0f7fa;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 40px;
+  height: 40px;
 }
 
 .close-icon:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  background: #e0f7fa;
+  color: #00bcd4;
 }
 
-/* Container du graphique - Corrections ApexCharts */
+/* Container du graphique dans carte étendue - MODIFIÉ: décalé à gauche */
 .chartContainer {
   flex: 1;
   margin: 10px 0;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 20px;
-  min-height: 400px;
+  padding: 0;
+  min-height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
+  margin-left: -15px; /* ← ICI: décalé vers la gauche */
 }
 
-/* Corrections spécifiques pour ApexCharts */
-.apexcharts-canvas {
-  width: 100% !important;
-}
-
-.apexcharts-inner {
-  transform: none !important;
-}
-
-.apexcharts-text {
-  fill: white !important;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-}
-
-.apexcharts-legend-text {
-  color: white !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-}
-
-.apexcharts-gridline {
-  stroke: rgba(255, 255, 255, 0.1) !important;
-}
-
-.apexcharts-xaxis-tick {
-  stroke: rgba(255, 255, 255, 0.3) !important;
-}
-
-.apexcharts-tooltip {
-  background: rgba(0, 0, 0, 0.8) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  border-radius: 8px !important;
-  color: white !important;
-}
-
-.apexcharts-tooltip-title {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: white !important;
-  font-weight: 600 !important;
-}
-
-/* Message pas de données */
-.no-data-message {
-  text-align: center;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.1rem;
-  padding: 40px;
-}
-
-/* Section détails compacte */
-.details-section {
-  margin-top: 15px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.details-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.details-header h4 {
-  margin: 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 600;
-}
-
-.items-count {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-
-.details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 6px;
-}
-
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  font-size: 0.8rem;
-  transition: background 0.2s ease;
-}
-
-.detail-item:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.detail-label {
-  opacity: 0.9;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.detail-value {
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  min-width: 25px;
-  text-align: center;
-}
-
-.more-items {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  font-size: 0.8rem;
-  opacity: 0.7;
-  font-style: italic;
-}
-
-/* Footer */
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.75rem;
-}
-
-.update-info {
-  opacity: 0.7;
-}
-
-.chart-type-info {
-  opacity: 0.7;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-
-/* Overlay pour l'expanded card */
+/* Overlay */
 .expanded-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
   z-index: 999;
-}
-
-/* Scrollbar */
-.details-section::-webkit-scrollbar {
-  width: 4px;
-}
-
-.details-section::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-}
-
-.details-section::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-}
-
-.details-section::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .ExpandedCard {
     width: 95%;
-    padding: 20px;
+    padding: 20px 15px 20px 10px;
     max-height: 95vh;
-  }
-  
-  .expanded-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  
-  .header-left {
-    width: 100%;
-    justify-content: space-between;
-  }
-  
-  .chart-type-selector {
-    align-self: flex-end;
   }
   
   .chartContainer {
     min-height: 300px;
-    padding: 10px;
-  }
-  
-  .details-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .CompactCard {
-    height: 140px;
-    padding: 20px 15px;
-  }
-  
-  .card-value {
-    font-size: 1.3rem;
-  }
-  
-  .card-title {
-    font-size: 1rem;
+    margin-left: -10px;
   }
 }

@@ -17,7 +17,8 @@ transporter.verify((error, success) => {
   else console.log('✅ Serveur SMTP prêt');
 });
 
-const sendStatusEmail = async (userEmail, status, adminNotes = '') => {
+const sendStatusEmail = async (userEmail, status, adminNotes = '') =>
+   {
   try {
     console.log(`📧 Tentative d'envoi d'email à: ${userEmail}, statut: ${status}`);
     

@@ -4,12 +4,12 @@ import ListeDentistes from '../sections/ListeDentistes'
 import Statistiques from '../sections/Statistiques'
 import Connexion from '../sections/Connexion'
 import Inscription from '../sections/Inscription'
+import Footer from './Footer'
 import './ContentArea.css'
 
 const ContentArea = ({ activeSection }) => {
   const renderSection = () => {
     switch (activeSection) {
-    
       case 'apropos':
         return <Apropos />
       case 'dentistes':
@@ -21,7 +21,7 @@ const ContentArea = ({ activeSection }) => {
       case 'inscription':
         return <Inscription />
       default:
-        return <Apropos/>
+        return <Apropos />
     }
   }
 
@@ -29,6 +29,7 @@ const ContentArea = ({ activeSection }) => {
     <main className="content-area">
       <div className="content-container">
         {renderSection()}
+        
       </div>
     </main>
   )

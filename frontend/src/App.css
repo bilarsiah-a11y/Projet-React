@@ -20,17 +20,30 @@ html, body {
   background-color: #f8f9fa;
 }
 
-/* CLÉ MAGIQUE : plus d’espace blanc entre navbar et contenu */
-.main-content,
+
+/* ============== CORRECTION DU PROBLÈME D'ESPACEMENT ============== */
 .navbar-layout .main-content,
 .sidebar-layout .main-content,
 .sidebar-Admin .main-content {
-  flex: 1;
-  padding: 20px 20px 60px;
-  padding-top: 12px !important;    /* ← ESPACE PARFAIT (12px = pro look) */
-  margin-top: 0 !important;
+  margin-top: 70px; /* Espace sous la navbar */
+  padding-top: 20px !important;
+  min-height: calc(100vh - 120px); /* Ajustez selon votre footer */
 }
 
+/* Pour le layout public avec NavbarPub */
+.navbar-layout {
+  position: relative;
+}
+
+/* Assurez-vous que le navbar est fixe */
+.navbar-fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 /* Responsive – toujours parfait */
 @media (max-width: 768px) {
   .main-content,
@@ -54,7 +67,7 @@ html, body {
   }
 }
 
-/* Erreur Boundary (propre) */
+
 .error-boundary {
   padding: 40px 20px;
   background-color: #ffebee;
@@ -67,6 +80,22 @@ html, body {
 .error-boundary pre { background: #f5f5f5; padding: 15px; overflow: auto; border-radius: 4px; }
 .error-boundary button {
   margin-top: 20px; padding: 12px 28px; background: #1976d2; color: white;
-  border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s;
+ border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s;
 }
 .error-boundary button:hover { background: #1565c0; }
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f5faff;
+}
+
+.main-content {
+  margin-top: 58px;   /* hauteur navbar */
+  margin-bottom: 45px; /* hauteur footer */
+  padding: 20px;
+  min-height: calc(100vh - 103px);
+  overflow-y: auto;
+}
+
+

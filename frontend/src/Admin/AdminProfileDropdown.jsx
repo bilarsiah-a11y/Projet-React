@@ -41,19 +41,19 @@ const AdminProfileDropdown = () => {
   };
 
   return (
-    <div className="profile-dropdown-wrapper" ref={menuRef}>
-      <button className="profile-toggle-btn" onClick={() => setShowMenu(!showMenu)}>
-        <IoPerson className="profile-icon" />
+    <div className="Adminprofile-dropdown-wrapper" ref={menuRef}>
+      <button className="Adminprofile-toggle-btn" onClick={() => setShowMenu(!showMenu)}>
+        <IoPerson className="Adminprofile-icon" />
         <span className="admin-name">{adminName}</span>
         <span className="dropdown-arrow">▼</span>
       </button>
 
       {showMenu && (
-        <div className="profile-menu">
-          <Link to="/admin/profil" className="menu-item" onClick={() => setShowMenu(false)}>
+        <div className="Adminprofile-menu">
+          <Link to="/admin/profil" className="Adminmenu-item" onClick={() => setShowMenu(false)}>
             <IoPerson /> Mon profil
           </Link>
-          <button className="menu-item logout-item" onClick={handleLogout}>
+          <button className="Adminmenu-item logout-item" onClick={handleLogout}>
             <IoLogOut /> Se déconnecter
           </button>
         </div>

@@ -1,11 +1,11 @@
 .accueil-court {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 70%);
-  min-height: 100vh;
+  min-height: 70vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px 0;
+  padding: 10px 0;
 }
 
 .hero {
@@ -21,11 +21,11 @@
   text-align: center;
 }
 
-h1 {
-  font-size: 2.6rem;
+h3 {
+  font-size: 2rem;
   line-height: 1.2;
-  margin-bottom: 16px;
   color: #2c3e50;
+  margin-top: 50px;
 }
 
 .red { color: #46d8e2; font-weight: 900; }
@@ -36,30 +36,75 @@ h1 {
   margin: 20px 0 40px;
 }
 
+/* STYLE DES BOUTONS */
 .actions {
   display: flex;
-  gap: 18px;
+  flex-direction: row;
+  gap: 20px;
   justify-content: center;
-  flex-wrap: wrap;
+  align-items: center;
   margin-bottom: 50px;
+  flex-wrap: wrap;
 }
 
-.btn {
-  padding: 14px 32px;
+/* Bouton principal */
+.primary {
+  background: #1dbacf;
+  color: white;
+  padding: 16px 36px;
   border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
   font-size: 1.1rem;
   transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 180px;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 6px rgba(29, 186, 207, 0.2);
 }
 
-.big { padding: 16px 36px; }
+.primary:hover {
+  background: #17a2b8;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(29, 186, 207, 0.3);
+  border-color: rgba(255, 255, 255, 0.3);
+}
 
-.primary  { background: #1dbacf; color: white; }
-.primary:hover { background: #17a2b8; transform: translateY(-3px); }
+/* Bouton secondaire */
+.secondary {
+  background: transparent;
+  color: #1dbacf;
+  padding: 16px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 180px;
+  border: 2px solid #1dbacf;
+  box-shadow: 0 4px 6px rgba(29, 186, 207, 0.1);
+}
 
-.secondary { background: transparent; color: #1dbacf; border: 2px solid #1dbacf; }
-.secondary:hover { background: #1dbacf; color: white; }
+.secondary:hover {
+  background: #1dbacf;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(29, 186, 207, 0.25);
+}
+
+/* Effet actif pour les deux boutons */
+.primary:active,
+.secondary:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(29, 186, 207, 0.2);
+}
 
 /* Mini régions */
 .regions-mini p {
@@ -85,6 +130,13 @@ h1 {
   font-size: 0.9rem;
   font-weight: 600;
   border: 1px solid #a0e6ee;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: #e0f7fa;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(29, 186, 207, 0.1);
 }
 
 /* CTA dentiste */
@@ -103,6 +155,12 @@ h1 {
   font-weight: 600;
   text-decoration: underline;
   font-size: 1.15rem;
+  transition: all 0.3s;
+}
+
+.link:hover {
+  color: #17a2b8;
+  text-decoration: none;
 }
 
 /* Footer tout petit */
@@ -118,6 +176,25 @@ h1 {
 @media (max-width: 768px) {
   h1 { font-size: 2.2rem; }
   .slogan { font-size: 1.25rem; }
-  .actions { flex-direction: column; align-items: center; }
-  .btn { width: 80%; max-width: 300px; }
+  .actions { 
+    flex-direction: column; 
+    gap: 15px;
+  }
+  .primary,
+  .secondary {
+    width: 90%;
+    max-width: 280px;
+    min-width: auto;
+  }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+  h1 { font-size: 1.9rem; }
+  .slogan { font-size: 1.1rem; }
+  .primary,
+  .secondary {
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
 }

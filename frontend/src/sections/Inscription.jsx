@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserShield } from "react-icons/fa";
@@ -6,22 +7,25 @@ import { MdOutlineMail } from "react-icons/md";
 import Axios from 'axios';
 import "../sectionsCss/Inscription.css"
 import logo2 from '../image/logo2.jpg';
+import logo3 from '../image/logo3.png';
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Inscription = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'warning'
+  const [messageType, setMessageType] = useState('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const navigate = useNavigate();
 
-  // Vérifier le statut périodiquement si l'utilisateur est en attente
   useEffect(() => {
     let interval;
     if (message.includes('attente') && email) {
       interval = setInterval(() => {
         checkUserStatus();
-      }, 5000); // Vérifier toutes les 5 secondes
+      }, 5000);
     }
     return () => clearInterval(interval);
   }, [message, email]);
@@ -41,7 +45,6 @@ const Inscription = () => {
           setMessage(`Inscription refusée: ${admin_notes || 'Raison non spécifiée'}`);
           setMessageType('error');
         }
-        // Si toujours 'pending', on ne fait rien
       })
       .catch(error => {
         console.error('Erreur vérification statut:', error);
@@ -63,12 +66,7 @@ const Inscription = () => {
     })
       .then((response) => {
         setMessage(response.data.message);
-        setMessageType('warning'); // Message d'attente
-        
-        // Ne pas vider les champs immédiatement
-        // On garde l'email pour vérifier le statut
-
-        // Vérifier le statut après 3 secondes
+        setMessageType('warning');
         setTimeout(() => {
           checkUserStatus();
         }, 3000);
@@ -96,27 +94,41 @@ const Inscription = () => {
   };
 
   return (
-    <div className="inscription-container">
-      <div className="image-side">
-        <img src={logo2} alt="Cabinet dentaire" />
-      </div>
-
-      <div className="form-side">
-        <h1>Inscription</h1>
-
+    <div className="loginPage flex">
+      {isTransitioning && <div className="page-transition"></div>}
+      
+   <div className="container flex">
+  <div className="img">
+    <img src={logo2} alt="Cabinet dentaire"/>
+    <div className="FooterDiv flex">
+      <p className="text">J'ai déjà un compte ?</p>
+      <Link to="/connexion"  className="connect-link"
+      onClick={() => setIsTransitioning(true)}>
+        Se connecter
+      </Link>
+    </div>
+  </div>
+</div>
+      <div className="formDiv flex">
+        <div className="headerDiv">
+         
+          <h1>Inscription</h1>
+        </div>
+        
         {message && (
           <div className={getMessageClass()}>
             {message}
           </div>
         )}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Nom d'utilisateur</label>
+        <form className="form grid" onSubmit={handleSubmit}>
+          <div className="inputDiv">
+            <label htmlFor="username">Nom d'utilisateur</label>
             <div className="input-wrapper">
               <FaUserShield className="icon" />
               <input
                 type="text"
+                id="username"
                 placeholder="Entrer votre nom d'utilisateur"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -125,12 +137,13 @@ const Inscription = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Email</label>
+          <div className="inputDiv">
+            <label htmlFor="email">Email</label>
             <div className="input-wrapper">
               <MdOutlineMail className="icon" />
               <input
                 type="email"
+                id="email"
                 placeholder="Entrer votre Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -139,29 +152,35 @@ const Inscription = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Mot de passe</label>
+          <div className="inputDiv">
+            <label htmlFor="password">Mot de passe</label>
             <div className="input-wrapper">
               <BsFillShieldLockFill className="icon" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
+                id="password"
                 placeholder="Entrer votre mot de passe"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
           </div>
 
-          <button className="btn3" type="submit">S'inscrire</button>
-
-          <p className="login-text">
-            J'ai déjà un compte ? <Link to="/connexion">Se connecter</Link>
-          </p>
+          <button className="btn flex" type="submit">
+            <span>S'inscrire</span>
+          </button>
         </form>
       </div>
     </div>
-  );
+  );;
 };
 
 export default Inscription;

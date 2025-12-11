@@ -1,0 +1,15 @@
+.footer-fixed {
+  /* position: fixed; */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background: rgb(217, 224, 228);
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+  z-index: 1000;
+}

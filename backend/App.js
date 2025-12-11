@@ -28,5 +28,5 @@ app.get('/', (req, res) => {
 
 // Démarrage du serveur
 app.listen(3002, () => {
-  console.log('Serveur sur http://localhost:3002');
+  console.log('Serveur connecter sur http://localhost:3002');
 });

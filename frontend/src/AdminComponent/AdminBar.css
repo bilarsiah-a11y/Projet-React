@@ -1,174 +1,220 @@
-/* Styles pour la barre de navigation admin - Thème bleu ciel */
-.navbar {
-  background: #00bcd4;
-  color: white;
-  padding: 0 20px;
-  box-shadow: 0 2px 15px rgba(0, 188, 212, 0.3);
+/* ============================================
+   BARRE D'ADMIN COMPACTE - STYLE FACEBOOK/YOUTUBE
+   ============================================ */
+
+/* Barre fixe en haut - CHANGEMENT 1: Background bleu */
+.Adminbar {
+  background: #03b5d4; /* Nouvelle couleur bleue */
+  color: white; /* Texte en blanc pour contraster */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-container {
+.Adminnav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 15px 0;
+  padding: 0 20px;
+  height: 100%;
 }
 
-.nav-logo h2 {
+/* Logo minimaliste - CHANGEMENT 2: Texte blanc */
+.Adminnav-logo h2 {
   margin: 0;
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 600;
+  color: white; /* Texte en blanc */
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
-.nav-content {
+/* Contenu principal */
+.Adminnav-content {
   display: flex;
   align-items: center;
   gap: 30px;
+  flex: 1;
+  justify-content: space-between;
+  margin-left: 40px; /* Espacement à droite */
 }
 
-.nav-menu {
+/* Menu d'icônes uniquement */
+.Adminnav-menu {
   display: flex;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 25px;
+  gap: 15px;
 }
 
-.nav-menu a {
-  color: white;
-  text-decoration: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.nav-menu a:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-/* === NOTIFICATION CLOCHE & DROPDOWN === */
-.notification-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.notification-bell-btn {
+/* Boutons icônes seulement - CHANGEMENT 2: Icônes blanches */
+.Adminnav-icon-btn {
   background: none;
   border: none;
-  font-size: 26px;
+  color: white; /* Icônes blanches */
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  opacity: 0.9;
+}
+
+.Adminnav-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.15); /* Fond semi-transparent blanc au survol */
+  color: white;
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.Adminnav-icon-btn:active {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(0);
+}
+
+/* Section droite alignée à droite */
+.Adminnav-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto; /* Pousse tout à droite */
+}
+
+/* === NOTIFICATIONS === */
+.Adminnotification-wrapper {
+  position: relative;
+}
+
+.Adminnotification-bell-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
   cursor: pointer;
   position: relative;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
-  color: white;                    /* ← changé en blanc pour matcher le thème */
+  color: white; /* Icône de cloche blanche */
   transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
 }
 
-.notification-bell-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.Adminnotification-bell-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  opacity: 1;
 }
 
-.notification-badge {
+.Adminnotification-bell-btn:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.Adminnotification-badge {
   position: absolute;
   top: 6px;
   right: 6px;
-  background: #e74c3c;
+  background: #ff4757;
   color: white;
   font-size: 10px;
   font-weight: bold;
-  min-width: 17px;
-  height: 17px;
+  min-width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #00bcd4;
+  border: 2px solid #03b5d4; /* Bordure de la couleur de fond */
 }
 
-/* === LE DÉCALAGE VERS LA DROITE QUE TU VOULAIS === */
-.notification-dropdown {
+/* Dropdown notifications - CHANGEMENT 3: Style du dropdown */
+.Adminnotification-dropdown {
   position: absolute;
-  right: -110px;          /* ← valeur magique pour être parfaitement aligné avec Profil & Logout */
-  left: auto !important;
-  top: 60px;
-  width: 380px;
-  max-height: 80vh;
+  right: 0;
+  top: 50px;
+  width: 320px;
+  max-height: 70vh;
   overflow: hidden;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   z-index: 9999;
-  animation: fadeInDown 0.3s ease;
+  animation: fadeInDown 0.2s ease;
+  border: 1px solid #e0e0e0;
 }
 
-/* Petite flèche qui pointe vers la cloche (trop beau) */
-.notification-dropdown::before {
+.Adminnotification-dropdown::before {
   content: '';
   position: absolute;
   top: -8px;
-  right: 118px;           /* ← ajusté pour suivre le décalage */
+  right: 15px;
   width: 16px;
   height: 16px;
   background: white;
   transform: rotate(45deg);
-  box-shadow: -3px -3px 10px rgba(0, 0, 0, 0.1);
-  z-index: -1;
+  border-top: 1px solid #e0e0e0;
+  border-left: 1px solid #e0e0e0;
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-10px); }
+  from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.dropdown-header {
-  padding: 14px 18px;
-  background: #00bcd4;
-  color: white;
-  font-weight: bold;
+.Admindropdown-header {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  color: #333;
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.dropdown-header span {
-  font-size: 14px;
-  opacity: 0.9;
+.Admindropdown-header span {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
 }
 
-.dropdown-list {
-  max-height: 60vh;
+.Admindropdown-list {
+  max-height: 50vh;
   overflow-y: auto;
 }
 
-.notif-item {
-  padding: 14px 16px;
+.Adminnotif-item {
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   transition: background 0.2s;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.notif-item:hover {
+.Adminnotif-item:hover {
   background: #f8f9fa;
 }
 
-.notif-avatar {
-  width: 42px;
-  height: 42px;
-  background: #00bcd4;
+.Adminnotif-avatar {
+  width: 36px;
+  height: 36px;
+  background: #03b5d4; /* Même couleur que le fond */
   color: white;
   border-radius: 50%;
   display: flex;
@@ -176,188 +222,246 @@
   justify-content: center;
   font-weight: bold;
   flex-shrink: 0;
-}
-
-.notif-text strong {
-  display: block;
   font-size: 14px;
 }
 
-.notif-text small {
-  color: #95a5a6;
-  font-size: 12px;
+.Adminnotif-text strong {
+  display: block;
+  font-size: 13px;
+  color: #333;
 }
 
-.no-notifications {
-  padding: 40px 20px;
+.Adminnotif-text small {
+  color: #888;
+  font-size: 11px;
+  display: block;
+  margin-top: 2px;
+}
+
+.Adminno-notifications {
+  padding: 30px 20px;
   text-align: center;
-  color: #7f8c8d;
+  color: #888;
   font-style: italic;
+  font-size: 14px;
 }
 
-.dropdown-footer {
+.Admindropdown-footer {
   padding: 12px;
   text-align: center;
   border-top: 1px solid #eee;
-  background: #f9f9f9;
+  background: #f8f9fa;
 }
 
-.dropdown-footer button {
-  background: #00bcd4;
+.Admindropdown-footer button {
+  background: #03b5d4; /* Même couleur que le fond */
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
-}
-
-.dropdown-footer button:hover {
-  background: #0097a7;
-}
-
-/* Styles pour le profil & logout */
-.nav-profile {
-  color: white;
-  text-decoration: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  transition: background 0.2s;
 }
 
-.nav-profile:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+.Admindropdown-footer button:hover {
+  background: #0299b8;
 }
 
-.logout-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: white;
-  font-size: 1.4rem;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-}
-
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px) rotate(180deg);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .nav-container {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .nav-menu,
-  .nav-content {
-    flex-direction: column;
-    gap: 15px;
-  }
-  .notification-dropdown {
-    right: 50%;
-    transform: translateX(50%);
-  }
-  .notification-dropdown::before {
-    right: 50%;
-    transform: translateX(50%) rotate(45deg);
-  }
-}
-/* === PROFIL DROPDOWN AVEC NOM === */
-.profile-dropdown-wrapper {
+/* === PROFIL DROPDOWN === */
+.Adminprofile-dropdown-wrapper {
   position: relative;
-  display: inline-block;
 }
 
-.profile-toggle-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 30px;
+.Adminprofile-toggle-btn {
+  background: rgba(255, 255, 255, 0.15); /* Fond semi-transparent */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white; /* Texte blanc */
+  padding: 6px 12px;
+  border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 500;
-  transition: all 0.3s ease;
-  font-size: 14px;
+  transition: all 0.2s ease;
+  font-size: 13px;
 }
 
-.profile-toggle-btn:hover {
+.Adminprofile-toggle-btn:hover {
   background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
+  border-color: rgb(72, 188, 223);
+}
+
+.Adminprofile-toggle-btn:active {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .profile-icon {
-  font-size: 18px;
+  font-size: 16px;
+  color: white;
 }
 
-.admin-name {
-  max-width: 130px;
+.Adminadmin-name {
+  max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.dropdown-arrow {
-  font-size: 10px;
+.Admindropdown-arrow {
+  font-size: 9px;
   transition: transform 0.2s;
+  color: white;
 }
 
-.profile-toggle-btn:hover .dropdown-arrow {
+.Adminprofile-toggle-btn:hover .Admindropdown-arrow {
   transform: rotate(180deg);
 }
 
-.profile-menu {
+.Adminprofile-menu {
   position: absolute;
   right: 0;
-  top: 50px;
-  width: 210px;
+  top: 45px;
+  width: 200px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 9999;
-  animation: fadeInDown 0.3s ease;
+  animation: fadeInDown 0.2s ease;
+  border: 1px solid #e0e0e0;
 }
 
-.menu-item {
+.Adminmenu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   transition: background 0.2s;
   width: 100%;
   text-align: left;
   border: none;
   background: none;
   cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-.menu-item:hover {
-  background: #f0f8ff;
+.Adminmenu-item:last-child {
+  border-bottom: none;
 }
 
-.logout-item {
-  color: #e74c3c;
+.Adminmenu-item:hover {
+  background: #f8f9fa;
 }
 
-.logout-item:hover {
-  background: #ffebee;
+.Adminlogout-item {
+  color: #ff4757;
 }
 
-.menu-item svg {
-  font-size: 18px;
+.Adminlogout-item:hover {
+  background: #fff5f5;
+}
+
+.Adminmenu-item svg {
+  font-size: 16px;
   opacity: 0.8;
+}
+
+/* ============================================
+   CORRECTION POUR LE SCROLL DU CONTENU
+   ============================================ */
+
+/* Conteneur principal (parent de AdminBar + Outlet) */
+.admin-layout-container {
+  padding-top: 60px; /* Espace pour la barre fixe */
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+/* Le contenu principal qui défile */
+.admin-main-content {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .Adminbar {
+    height: 55px;
+  }
+  
+  .admin-layout-container {
+    padding-top: 55px;
+  }
+  
+  .Adminnav-container {
+    padding: 0 15px;
+  }
+  
+  .Adminnav-logo h2 {
+    font-size: 1.2rem;
+  }
+  
+  .Adminnav-icon-btn {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+  
+  .Adminnotification-bell-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  
+  .Adminprofile-toggle-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  
+  .Adminnotification-dropdown {
+    width: 280px;
+    right: -50px;
+  }
+  
+  .Adminnotification-dropdown::before {
+    right: 55px;
+  }
+  
+  .admin-main-content {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Adminnav-content {
+    gap: 15px;
+    margin-left: 20px;
+  }
+  
+  .Adminnav-menu {
+    gap: 10px;
+  }
+  
+  .Adminnav-right {
+    gap: 10px;
+  }
+  
+  .Adminnotification-dropdown {
+    width: 250px;
+    right: -80px;
+  }
+  
+  .Adminnotification-dropdown::before {
+    right: 85px;
+  }
 }

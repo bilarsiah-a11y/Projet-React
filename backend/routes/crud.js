@@ -184,32 +184,38 @@ router.get('/profil/:id', verifyToken, async (req, res) => {
   }
 });
 
-// Liste des dentistes
 router.get("/ListeDentistes", async (req, res) => {
   const { region } = req.query;
 
   let SQL = `
     SELECT 
-      p.id, p.Nom, p.Prenom, p.genre, p.Adresse, 
+      p.id, p.Nom, p.Prenom, p.genre, p.Adresse, p.Lieu,
       p.NumOrdre, p.Titre, p.Domaine, p.Region, p.Contact, p.AutreContact,
       u.email, u.profileImage
     FROM profil p
     INNER JOIN users u ON p.users_id = u.id
+    WHERE u.status = 'approved'
   `;
 
   const params = [];
 
   if (region && region.trim() !== "") {
-    SQL += " WHERE p.Region = ?";
+    SQL += " AND p.Region = ?";
     params.push(region);
   }
+
+  SQL += " ORDER BY p.Nom, p.Prenom";
 
   try {
     const [result] = await db.execute(SQL, params);
     res.json(result);
   } catch (err) {
     console.error('❌ Erreur liste dentistes:', err.message);
-    res.status(500).json({ message: "Erreur de lecture", details: err.sqlMessage, alertType: 'error' });
+    res.status(500).json({ 
+      message: "Erreur de lecture", 
+      details: err.sqlMessage, 
+      alertType: 'error' 
+    });
   }
 });
 
@@ -351,5 +357,6 @@ router.put('/Modifier/:id', verifyToken, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;

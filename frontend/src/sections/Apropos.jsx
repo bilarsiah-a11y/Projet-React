@@ -1,7 +1,8 @@
-// src/pages/AccueilPublic.jsx
+
 import React from "react";
 import { Link } from "react-router-dom";
 import "../sectionsCss/Apropos.css";
+
 
 const Apropos = () => {
   return (
@@ -11,20 +12,20 @@ const Apropos = () => {
       <section className="hero">
         <div className="container">
 
-          <h1>
+          <h3>
             Trouvez votre dentiste<br />
             dans <span className="red">toutes les régions</span> de Madagascar
-          </h1>
+          </h3>
 
           <p className="slogan">
             Un beau sourire, partout à Mada
           </p>
 
           <div className="actions">
-            <Link to="/listedentistes" className="btn big primary">
+            <Link to="/listedentistes" className=" primary">
               Voir les dentistes
             </Link>
-            <Link to="/connexion" className="btn big secondary">
+            <Link to="/connexion" className="secondary">
               Espace dentiste
             </Link>
           </div>
@@ -50,10 +51,6 @@ const Apropos = () => {
         </div>
       </section>
 
-      {/* Petit footer discret */}
-      <footer className="mini-footer">
-        <p>© 2025 SourireGuide – Le sourire malgache connecté</p>
-      </footer>
     </div>
   );
 };

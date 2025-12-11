@@ -2,13 +2,14 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Navigate, Outlet } from 'react-router-dom';
 
 // Composants publique
-import Navbar from './components/Navbar';
+import NavbarPub from './components/NavbarPub';
 import ContentArea from './components/ContentArea';
 import Connexion from './sections/Connexion';
 import Inscription from './sections/Inscription.jsx';
 import ListeDentistes from './sections/ListeDentistes';
 import Apropos from './sections/Apropos';
 import Statistiques from './sections/Statistiques';
+import Footer from './components/Footer';
 
 // Composants utilisateur
 import Profil from './sections2/Profil';
@@ -16,7 +17,7 @@ import Apropos2 from './sections2/Apropos2';
 import ListeDentiste2 from './sections2/ListeDentistes2.jsx';
 import Statistiques2 from './sections2/Statistiques2';
 import AutreArea from './composant/AutreArea';
-import Sidebar from './composant/Sidebar';
+import NavbarPrivee from './composant/NavbarPrivee';
 
 // Admin composant
 import RequireAdmin from './Admin/RequireAdmin';
@@ -28,31 +29,34 @@ import AdminValide from './Admin/AdminValide';
 import AdminProfil from './Admin/AdminProfil';
 
 // CSS
-import './App.css';
+// import './App.css';
+
 
 // ================= Layouts Wrappers =================
 
-// Layout Public en utilisant Navbar
+// Layout Public (Navbar + Footer)
 const PublicLayout = () => (
   <div className="navbar-layout">
-    <Navbar />
+    <NavbarPub />
     <div className="main-content">
       <Outlet />
     </div>
+    <Footer />
   </div>
 );
 
-// Layout Utilisateur en utilisant avec Sidebar
+// Layout Utilisateur (Sidebar + Footer)
 const UserLayout = () => (
   <div className="sidebar-layout">
-    <Sidebar />
+    <NavbarPrivee />
     <div className="main-content">
       <Outlet />
     </div>
+    <Footer />
   </div>
 );
 
-// Layout Admin en utilisant avec AdminBar
+// Layout Admin (AdminBar + Footer)
 const AdminLayout = () => (
   <RequireAdmin>
     <div className="sidebar-layout">
@@ -60,15 +64,18 @@ const AdminLayout = () => (
       <div className="main-content">
         <Outlet />
       </div>
+      <Footer />
     </div>
   </RequireAdmin>
 );
 
-// ================= Récupération de Token =================
+
+// ================= Token =================
 const getToken = () => {
   try {
     const stored = localStorage.getItem('token');
     if (!stored || stored === 'null' || stored === 'undefined') return null;
+
     try {
       return JSON.parse(stored);
     } catch {
@@ -81,7 +88,7 @@ const getToken = () => {
   }
 };
 
-// ================= Route Guard pour utilisateur connecté =================
+// ================= Protéger routes utilisateur =================
 const RequireAuth = ({ children }) => {
   const token = getToken();
   const location = useLocation();
@@ -92,13 +99,15 @@ const RequireAuth = ({ children }) => {
   return children;
 };
 
+
 // ================= App =================
 function App() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          {/* === Routes Publiques === */}
+
+          {/* === PUBLIC === */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<ContentArea />} />
             <Route path="/contentarea" element={<ContentArea />} />
@@ -109,12 +118,14 @@ function App() {
             <Route path="/statistiques" element={<Statistiques />} />
           </Route>
 
-          {/* === Routes Utilisateur protégées=== */}
-          <Route element={
-            <RequireAuth>
-              <UserLayout />
-            </RequireAuth>
-          }>
+          {/* === UTILISATEUR === */}
+          <Route
+            element={
+              <RequireAuth>
+                <UserLayout />
+              </RequireAuth>
+            }
+          >
             <Route path="/autrearea" element={<AutreArea />} />
             <Route path="/profil" element={<Profil />} />
             <Route path="/listedentiste2" element={<ListeDentiste2 />} />
@@ -122,7 +133,7 @@ function App() {
             <Route path="/statistiques2" element={<Statistiques2 />} />
           </Route>
 
-          {/* === Routes Admin protégées par RequireAdmin === */}
+          {/* === ADMIN === */}
           <Route element={<AdminLayout />}>
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/admin/home" element={<AdminHome />} />
@@ -132,7 +143,7 @@ function App() {
             <Route path="/admin/profil" element={<AdminProfil />} />
           </Route>
 
-          {/* === Redirection par défaut === */}
+          {/* === DEFAULT REDIRECT === */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </ErrorBoundary>
@@ -146,14 +157,17 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
+
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
+
   componentDidCatch(error, errorInfo) {
     console.error('ERREUR CAPTURÉE:', error);
     console.error('DÉTAILS:', errorInfo);
     this.setState({ error, errorInfo });
   }
+
   render() {
     if (this.state.hasError) {
       return (
@@ -174,3 +188,4 @@ class ErrorBoundary extends React.Component {
 }
 
 export default App;
+
