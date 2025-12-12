@@ -1,101 +1,242 @@
-/* ============== RESET & LAYOUT GÉNÉRAL ============== */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+
+/* ========== CAPTURE D'ÉCRAN ========== */
+.screenshot-target {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 1200px;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
-  font-family: 'Segoe UI', Arial, sans-serif;
-}
-
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-}
-
-
-/* ============== CORRECTION DU PROBLÈME D'ESPACEMENT ============== */
-.navbar-layout .main-content,
-.sidebar-layout .main-content,
-.sidebar-Admin .main-content {
-  margin-top: 70px; /* Espace sous la navbar */
-  padding-top: 20px !important;
-  min-height: calc(100vh - 120px); /* Ajustez selon votre footer */
-}
-
-/* Pour le layout public avec NavbarPub */
-.navbar-layout {
+.capture-area {
+  width: 100%;
+  min-height: 500px;
+  background: white;
   position: relative;
 }
 
-/* Assurez-vous que le navbar est fixe */
-.navbar-fixed {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.print-only {
+  display: none;
 }
-/* Responsive – toujours parfait */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  
+  .outlet-wrapper {
+    padding: 0;
+    margin: 0;
+  }
+  
+  body {
+    background: white !important;
+  }
+}
+
+/* ========== UTILITÉS ========== */
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+.scroll-lock {
+  overflow: hidden !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .user-layout .main-content.user-main,
+  .admin-layout .main-content.admin-main {
+    margin-left: 0;
+    width: 100%;
+    border-radius: 0;
+    padding: 25px 15px;
+  }
+  
+  .user-layout .footer,
+  .admin-layout .footer {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .sidebar-user,
+  .sidebar-admin {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar-user.active,
+  .sidebar-admin.active {
+    transform: translateX(0);
+  }
+  
+  .public-layout .main-content.public-main {
+    margin-top: 60px;
+    padding: 20px 15px;
+  }
+  
+  .navbar-public {
+    height: 60px;
+    padding: 0 15px;
+  }
+}
+
 @media (max-width: 768px) {
-  .main-content,
-  .navbar-layout .main-content,
-  .sidebar-layout .main-content,
-  .sidebar-Admin .main-content {
-    padding-top: 16px !important;
-    padding-left: 15px;
-    padding-right: 15px;
+  .outlet-wrapper {
+    padding: 15px 10px;
+  }
+  
+  .user-layout .main-content.user-main,
+  .admin-layout .main-content.admin-main {
+    padding: 20px 10px;
+  }
+  
+  .public-layout .main-content.public-main {
+    margin-top: 55px;
+    padding: 15px 10px;
+  }
+  
+  .footer {
+    padding: 20px 0;
   }
 }
 
 @media (max-width: 480px) {
-  .main-content,
-  .navbar-layout .main-content,
-  .sidebar-layout .main-content,
-  .sidebar-Admin .main-content {
-    padding-top: 14px !important;
-    padding-left: 10px;
-    padding-right: 10px;
+  .public-layout .main-content.public-main {
+    margin-top: 50px;
+    padding: 10px;
+  }
+  
+  .outlet-wrapper {
+    padding: 10px 5px;
+  }
+  
+  .screenshot-target {
+    padding: 15px;
   }
 }
 
+/* ========== ANIMATIONS ========== */
+.fade-enter {
+  opacity: 0;
+}
 
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+/* ========== SCROLLBAR PERSONNALISÉE ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.sidebar-user::-webkit-scrollbar-track,
+.sidebar-admin::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-user::-webkit-scrollbar-thumb,
+.sidebar-admin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== ERROR BOUNDARY ========== */
 .error-boundary {
-  padding: 40px 20px;
-  background-color: #ffebee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
+  padding: 40px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   text-align: center;
-  font-family: monospace;
 }
-.error-boundary h1 { color: #c62828; margin-bottom: 20px; }
-.error-boundary .error-box { background: white; padding: 20px; border-radius: 8px; display: inline-block; margin: 20px auto; }
-.error-boundary pre { background: #f5f5f5; padding: 15px; overflow: auto; border-radius: 4px; }
+
+.error-boundary h1 {
+  color: #e74c3c;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.error-box {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  max-width: 800px;
+  text-align: left;
+  overflow: auto;
+}
+
+.error-box h3 {
+  color: #2c3e50;
+  margin: 15px 0 10px 0;
+}
+
+.error-box pre {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  border: 1px solid #e9ecef;
+}
+
 .error-boundary button {
-  margin-top: 20px; padding: 12px 28px; background: #1976d2; color: white;
- border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.3s;
-}
-.error-boundary button:hover { background: #1565c0; }
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #f5faff;
-}
-
-.main-content {
-  margin-top: 58px;   /* hauteur navbar */
-  margin-bottom: 45px; /* hauteur footer */
-  padding: 20px;
-  min-height: calc(100vh - 103px);
-  overflow-y: auto;
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-
+.error-boundary button:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}

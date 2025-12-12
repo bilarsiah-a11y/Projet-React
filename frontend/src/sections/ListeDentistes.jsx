@@ -73,7 +73,7 @@ const ListeDentistes = () => {
           <Search className="search-icon" size={20} />
           <input
             type="text"
-            placeholder="Rechercher un dentiste par nom, ville..."
+            placeholder="Rechercher un dentiste par nom ,régions  "
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input-visiteur"
@@ -177,7 +177,7 @@ const ListeDentistes = () => {
                         {dentiste.Adresse || "Non renseignée"}
                       </span>
                       <div className="localisation">
-                        {dentiste.Lieu && <span className="ville">{dentiste.Lieu}</span>}
+                         <span className="ville">Region d'exercice : </span>
                         {dentiste.Region && <span className="region">{dentiste.Region}</span>}
                       </div>
                     </div>

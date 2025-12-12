@@ -29,6 +29,7 @@ body {
 /* Container principal COMPACT */
 .profil-section {
   min-height: calc(130vh - 60px);
+  width: 1310px;
   background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 70%);
   display: flex;
   justify-content: center;

@@ -426,7 +426,7 @@ const Statistiques = () => {
     return (
         <div className="statistiques-container">
             <div className="statistiques-header">
-                <h1>Tableau de Bord Statistique</h1>
+                <h1> Statistique</h1>
                 
             </div>
 

@@ -420,14 +420,14 @@ const Statistiques2 = () => {
     <div className="stats-container">
       {/* En-tête personnalisé */}
       <div className="stats-header">
-        <div className="header-content">
+       
           <div>
-            <h1>📊 Vos Statistiques Personnelles</h1>
+            <h2  className="h1" >📊 Vos Statistiques Personnelles</h2>
             <p className="header-subtitle">
               {profile ? `${profile.Titre || ''} ${profile.Nom || ''} ${profile.Prenom || ''}` : 'Dentiste'} • 
               Analyse de votre position parmi {allDentistes.length} dentistes
             </p>
-          </div>
+          
         </div>
       </div>
 
@@ -455,161 +455,94 @@ const Statistiques2 = () => {
         </div>
       </div>
 
-      {/* Section: Performance détaillée */}
-      <div className="section">
-        <h2 className="section-title accent">📊 Performance Mensuelle</h2>
-        
-        <div className="charts-grid">
-          <div className="chart-card">
-            <h3>📅 Évolution des inscriptions</h3>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E8F4FC" />
-                  <XAxis dataKey="month" stroke="#3498DB" />
-                  <YAxis stroke="#3498DB" />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: themeColors.secondary,
-                      borderColor: themeColors.primary,
-                      color: themeColors.darkBlue
-                    }}
-                  />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="vous" 
-                    name="Votre inscription" 
-                    stroke={themeColors.primary} 
-                    strokeWidth={3}
-                    dot={{ fill: themeColors.primary, strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, fill: themeColors.accent }}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="inscriptions" 
-                    name="Nouveaux dentistes" 
-                    stroke={themeColors.success} 
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+     {/* NOUVELLE SECTION : Performance Mensuelle + Analyse Région côte à côte */}
+<div className="two-columns-section">
+  {/* Performance Mensuelle */}
+  <div className="section two-col-card">
+    <h2 className="section-title accent small-title">Performance Mensuelle</h2>
+    
+    <div className="charts-grid">
+      <div className="chart-card">
+        <h3>Évolution des inscriptions</h3>
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={monthlyPerformance}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E8F4FC" />
+              <XAxis dataKey="month" stroke="#3498DB" />
+              <YAxis stroke="#3498DB" />
+              <Tooltip contentStyle={{ backgroundColor: themeColors.secondary, borderColor: themeColors.primary, color: themeColors.darkBlue }} />
+              <Legend />
+              <Line type="monotone" dataKey="vous" name="Votre inscription" stroke={themeColors.primary} strokeWidth={3} dot={{ fill: themeColors.primary, strokeWidth: 2, r: 4 }} activeDot={{ r: 6, fill: themeColors.accent }} />
+              <Line type="monotone" dataKey="inscriptions" name="Nouveaux dentistes" stroke={themeColors.success} strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Analyse de Votre Région */}
+  {profile?.Region && (
+    <div className="section two-col-card">
+      <h2 className="section-title success small-title">
+        Analyse de Votre Région: {profile.Region}
+      </h2>
+      
+      <div className="region-grid">
+        <div className="region-card">
+          <h3>Dentistes dans votre région</h3>
+          <div className="region-count">{personalStats.totalInRegion}</div>
+          <div className="region-subtitle">Total des dentistes enregistrés dans {profile.Region}</div>
+        </div>
+        <div className="region-card">
+          <h3>Titre</h3>
+          <div className="chart-container small">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={genderStats}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {genderStats.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ backgroundColor: themeColors.secondary, borderColor: themeColors.primary, color: themeColors.darkBlue }} />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Section: Analyse régionale */}
-      {profile?.Region && (
-        <div className="section">
-          <h2 className="section-title success">📍 Analyse de Votre Région: {profile.Region}</h2>
-          
-          <div className="region-grid">
-            <div className="region-card">
-              <h3>🏥 Dentistes dans votre région</h3>
-              <div className="region-count">
-                {personalStats.totalInRegion}
-              </div>
-              <div className="region-subtitle">
-                Total des dentistes enregistrés dans {profile.Region}
-              </div>
-            </div>
-
-            <div className="region-card">
-              <h3>Titre</h3>
-              <div className="chart-container small">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={genderStats}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {genderStats.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: themeColors.secondary,
-                        borderColor: themeColors.primary,
-                        color: themeColors.darkBlue
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-          
-          {/* Statistiques Régionales en bas */}
-          <div className="region-stats-bottom">
-            <div className="chart-card">
-              <h3>📊 Statistiques Régionales</h3>
-              <div className="chart-container" style={{ height: '250px' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={regionStats}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E8F4FC" />
-                    <XAxis dataKey="name" stroke="#3498DB" />
-                    <YAxis stroke="#3498DB" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: themeColors.secondary,
-                        borderColor: themeColors.primary,
-                        color: themeColors.darkBlue
-                      }}
-                      formatter={(value) => [value, 'Dentistes']}
-                    />
-                    <Bar 
-                      dataKey="dentistes" 
-                      name="Nombre de dentistes" 
-                      fill={themeColors.accent}
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Section: Objectifs et améliorations */}
-      <div className="section">
-        <h2 className="section-title warning">🎯 Objectifs d'Amélioration</h2>
-        
-        <div className="goals-card">
-          
-          <div className="recommendations">
-            <div className="recommendations-title">Actions recommandées:</div>
-            <div className="recommendations-grid">
-              <div className="recommendation-item">
-                <span className="recommendation-icon">📝</span>
-                Complétez votre numéro d'ordre
-              </div>
-              <div className="recommendation-item">
-                <span className="recommendation-icon">📍</span>
-                Précisez votre localisation
-              </div>
-              <div className="recommendation-item">
-                <span className="recommendation-icon">📞</span>
-                Ajoutez vos contacts
-              </div>
-              <div className="recommendation-item">
-                <span className="recommendation-icon">🎓</span>
-                Spécifiez votre spécialité
-              </div>
-            </div>
+      <div className="region-stats-bottom">
+        <div className="chart-card">
+          <h3>Statistiques Régionales</h3>
+          <div className="chart-container" style={{ height: '250px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={regionStats}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8F4FC" />
+                <XAxis dataKey="name" stroke="#3498DB" />
+                <YAxis stroke="#3498DB" />
+                <Tooltip contentStyle={{ backgroundColor: themeColors.secondary, borderColor: themeColors.primary, color: themeColors.darkBlue }} formatter={(value) => [value, 'Dentistes']} />
+                <Bar dataKey="dentistes" name="Nombre de dentistes" fill={themeColors.accent} radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
+    </div>
+  )}
+</div>
+
     </div>
   );
 };
 
 export default Statistiques2;
+

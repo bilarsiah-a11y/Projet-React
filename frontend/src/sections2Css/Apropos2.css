@@ -1,7 +1,6 @@
 /* Styles généraux pour la page d'accueil dentiste */
 .dentiste-accueil {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0f7fa 0%, #ffffff 70%);
   padding: 20px;
   margin-top: 30px;
 }

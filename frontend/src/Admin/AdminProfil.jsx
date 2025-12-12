@@ -459,16 +459,9 @@ const AdminProfil = () => {
                       <label className="detail-label">Rôle</label>
                       <p className="detail-value role-display">Administrateur</p>
                     </div>
+                  
                     
-                    <div className="detail-row">
-                      <label className="detail-label">Statut</label>
-                      <p className="detail-value status-display">Actif</p>
-                    </div>
-                    
-                    <div className="detail-row">
-                      <label className="detail-label">Date de création</label>
-                      <p className="detail-value">15 Janvier 2024</p>
-                    </div>
+  
                   </div>
                 </div>
               </div>
