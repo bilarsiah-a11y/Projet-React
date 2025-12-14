@@ -86,7 +86,7 @@
 }
 
 .FooterDiv .connect-link {
-  color: #64bcdf; /* BLEU CIEL */
+  color: #03b5d4; 
   text-decoration: none;
   font-weight: 600;
   margin-left: 8px;
@@ -101,8 +101,8 @@
 /* 3. Effet au survol */
 .FooterDiv .connect-link:hover {
   color: #ffffff; /* Texte blanc au survol */
-  background-color: #87ceeb; /* Fond bleu ciel au survol */
-  border-color: #87ceeb; /* Bordure bleu ciel au survol */
+  background-color: #03b5d4; /* Fond bleu ciel au survol */
+  border-color: #03b5d4; /* Bordure bleu ciel au survol */
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
@@ -117,7 +117,7 @@
 }
 
 .FooterDiv .text a:hover {
-  color: #2980b9;
+  color: #03b5d4;
   text-decoration: none; /* Pas de soulignement */
   text-decoration: underline;
 }
@@ -152,7 +152,7 @@
   font-size: 2.2rem;
   margin: 0;
   font-weight: 700;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -225,7 +225,7 @@
 .input-wrapper .icon {
   position: absolute;
   left: 15px;
-  color: #3498db;
+  color: #03b5d4;
   font-size: 1.2rem;
   z-index: 1;
 }
@@ -243,7 +243,7 @@
 
 .input-wrapper input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #03b5d4;
   background: white;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
@@ -276,7 +276,7 @@
 .btn {
   margin-top: 20px;
   padding: 16px 30px;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
   color: white;
   border: none;
   border-radius: 10px;
@@ -293,7 +293,7 @@
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
-  background: linear-gradient(135deg, #2980b9, #2573a7);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
 }
 
 .btn:active {

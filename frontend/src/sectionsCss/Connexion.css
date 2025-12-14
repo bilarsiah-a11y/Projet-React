@@ -90,7 +90,7 @@
 
 /* Lien à droite - Bleu ciel simple */
 .logoimg .form-footer .connect-link1 {
-  color: #87CEEB; /* Bleu ciel simple */
+  color: #03b5d4; /* Bleu ciel simple */
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
@@ -108,7 +108,7 @@
 .logoimg .form-footer .connect-link1:hover {
   color: white;
   background-color: rgba(135, 206, 235, 0.3);
-  border-color: #87CEEB;
+  border-color: #03b5d4;
   text-decoration: none;
   transform: translateY(-1px); /* Animation légère */
 }
@@ -177,7 +177,7 @@
   margin-bottom: 25px;
   text-align: center;
   font-weight: 700;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -278,7 +278,7 @@
 .input-container .icon2 {
   position: absolute;
   left: 15px;
-  color: #3498db;
+  color: #03b5d4;
   font-size: 1.2rem;
   z-index: 1;
   pointer-events: none;
@@ -327,7 +327,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px white inset;
   box-shadow: 0 0 0px 1000px white inset;
-  border: 2px solid #3498db !important;
+  border: 2px solid #03b5d4 !important;
 }
 
 /* Container mot de passe */
@@ -358,7 +358,7 @@ input:-webkit-autofill:focus {
 .btn1 {
   margin-top: 10px;
   padding: 16px 30px;
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
   color: white;
   border: none;
   border-radius: 10px;
@@ -376,7 +376,7 @@ input:-webkit-autofill:focus {
 .btn1:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
-  background: linear-gradient(135deg, #2980b9, #2573a7);
+  background: linear-gradient(135deg, #03b5d4, #03b5d4);
 }
 
 .btn1:disabled {
@@ -433,13 +433,13 @@ input:-webkit-autofill:focus {
 
 .otp-input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #03b5d4;
   background: white;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 .otp-input.filled {
-  border-color: #3498db;
+  border-color: #03b5d4;
   background: #e3f2fd;
 }
 
@@ -477,7 +477,7 @@ input:-webkit-autofill:focus {
 
 .strength-3 .strength-fill {
   width: 60%;
-  background-color: #3b82f6;
+  background-color: #03b5d4;
 }
 
 .strength-4 .strength-fill {
